@@ -1,0 +1,90 @@
+:root {
+  --vp-c-brand-1: #0d5c63;
+  --vp-c-brand-2: #16808a;
+  --vp-c-brand-3: #1e96a0;
+  --vp-c-brand-soft: rgba(13, 92, 99, 0.14);
+  --vp-c-text-1: #1a2228;
+  --vp-c-text-2: #44515a;
+  --vp-c-text-3: #667780;
+  --vp-font-family-base: "IBM Plex Sans", "Source Han Sans SC", "Noto Sans SC",
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+  --vp-font-family-mono: "JetBrains Mono", "Cascadia Code", "Fira Code",
+    "SFMono-Regular", monospace;
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    135deg,
+    #0d5c63 0%,
+    #1e96a0 45%,
+    #ef8354 100%
+  );
+  --vp-home-hero-image-background-image: radial-gradient(
+    circle at center,
+    rgba(239, 131, 84, 0.24),
+    rgba(13, 92, 99, 0.06) 48%,
+    transparent 72%
+  );
+  --vp-home-hero-image-filter: blur(58px);
+}
+
+.dark {
+  --vp-c-brand-1: #56bcc8;
+  --vp-c-brand-2: #87d7df;
+  --vp-c-brand-3: #a8e6ec;
+  --vp-home-hero-name-background: linear-gradient(
+    135deg,
+    #7ee6ee 0%,
+    #87d7df 45%,
+    #ffba8a 100%
+  );
+}
+
+.VPHome {
+  background:
+    radial-gradient(circle at top left, rgba(13, 92, 99, 0.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(239, 131, 84, 0.08), transparent 24%);
+}
+
+.VPHomeHero .text,
+.VPHomeHero .tagline {
+  max-width: 48rem;
+}
+
+.VPFeature {
+  border: 1px solid rgba(13, 92, 99, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 251, 252, 0.98));
+  box-shadow: 0 14px 32px rgba(13, 92, 99, 0.08);
+}
+
+.dark .VPFeature {
+  border-color: rgba(135, 215, 223, 0.16);
+  background: linear-gradient(180deg, rgba(22, 28, 34, 0.98), rgba(26, 33, 39, 0.98));
+  box-shadow: none;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3 {
+  letter-spacing: -0.02em;
+}
+
+.vp-doc h1 {
+  font-size: 2.1rem;
+}
+
+.vp-doc p,
+.vp-doc li {
+  line-height: 1.82;
+}
+
+.vp-doc a {
+  text-underline-offset: 3px;
+}
+
+.vp-doc blockquote {
+  border-left: 4px solid var(--vp-c-brand-1);
+  background: rgba(13, 92, 99, 0.04);
+}
+
+.vp-doc code {
+  font-size: 0.92em;
+}

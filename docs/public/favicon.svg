@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="java全栈">
+  <rect width="128" height="128" rx="28" fill="#0d5c63"/>
+  <path d="M36 87h56" stroke="#f8f5f2" stroke-width="8" stroke-linecap="round"/>
+  <path d="M49 78c0-11 30-9 30-28 0-7-5-12-15-15" stroke="#ef8354" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M61 96c8 3 17 3 26 0" stroke="#87d7df" stroke-width="7" fill="none" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "name": "java-fullstack-blog",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Java 全栈 + AI 实战博客，基于 VitePress 构建。",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
