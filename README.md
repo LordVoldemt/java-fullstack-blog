@@ -49,7 +49,7 @@ npm run deploy -- "docs: 更新 Java 并发文章"
 它会自动执行：
 
 - `npm run docs:build`
-- `git add .`
+- 只暂存博客发布相关内容：`docs`、`README.md`、`package.json`、`package-lock.json`、`scripts`、`.github`
 - `git commit -m "<你的提交信息>"`
 - `git push origin main`
 

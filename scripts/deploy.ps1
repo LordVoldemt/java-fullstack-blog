@@ -4,6 +4,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$pathsToStage = @(
+  "docs",
+  "README.md",
+  "package.json",
+  "package-lock.json",
+  "scripts",
+  ".github"
+)
+
 Write-Host "==> Building docs..."
 npm.cmd run docs:build
 
@@ -15,9 +24,15 @@ if (-not $status) {
 }
 
 Write-Host "==> Staging changes..."
-git add .
+git add -- $pathsToStage
 
 Write-Host "==> Committing changes..."
+$staged = git diff --cached --name-only
+if (-not $staged) {
+  Write-Host "No blog-related changes staged. Nothing to publish."
+  exit 0
+}
+
 git commit -m $Message
 
 Write-Host "==> Pushing to origin/main..."

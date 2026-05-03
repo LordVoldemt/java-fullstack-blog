@@ -10,7 +10,7 @@ hero:
       text: 开始阅读
       link: /java/
     - theme: alt
-      text: 查看 AI 专题
+      text: 查看 AI 专题啊
       link: /ai/
 features:
   - title: Java 后端基础
