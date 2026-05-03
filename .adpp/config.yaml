@@ -1,0 +1,74 @@
+project:
+  name: "java全栈"
+  type: "Web应用"
+  tech_stack: "VitePress + Markdown + GitHub Pages"
+  team_size: "1人"
+  created_at: "2026-05-02"
+
+runtime:
+  model_management: "external"
+  credentials_source: "user-environment"
+  notes:
+    - "模型选择由用户在 Codex、Claude Code 或外部插件中自行决定"
+    - "密钥与令牌通过环境变量或企业统一网关管理，不写入项目配置"
+
+danger_operations:
+  mode: "confirm"
+  mobile_webhook: ""
+  patterns:
+    - "DROP TABLE"
+    - "DELETE FROM"
+    - "rm -rf"
+    - "truncate"
+    - "UPDATE.*WHERE.*1=1"
+
+closeout:
+  source_of_truth_docs:
+    - ".adpp/changes/<feature>/prd.md"
+    - ".adpp/changes/<feature>/design.md"
+    - ".adpp/changes/<feature>/ux-notes.md"
+  derived_docs:
+    - "README.md"
+    - "docs/index.md"
+  trigger_matrix:
+    - name: "content-structure-change"
+      paths:
+        - "docs/**"
+        - ".vitepress/**"
+      update:
+        - ".adpp/changes/<feature>/design.md"
+        - ".adpp/changes/<feature>/ux-notes.md"
+        - "README.md"
+      verify:
+        - "npm run docs:build"
+    - name: "theme-or-config-change"
+      paths:
+        - ".vitepress/theme/**"
+        - ".vitepress/config.*"
+        - "package.json"
+      update:
+        - ".adpp/changes/<feature>/design.md"
+        - ".adpp/changes/<feature>/tasks.md"
+        - "README.md"
+      verify:
+        - "npm run docs:build"
+  verification_layers:
+    base:
+      - "npm run docs:build"
+    docs_only:
+      - "npm run docs:build"
+  evidence_dirs:
+    - "dist/"
+    - "output/"
+  progress_note_template: |
+    # Round Closeout
+    ## Summary
+    - Scope: {{ scope }}
+    ## Docs Updated
+    - {{ docs_updated }}
+    ## Verification
+    - {{ verification_summary }}
+    ## Evidence
+    - {{ evidence_paths }}
+    ## Risks
+    - {{ risks }}

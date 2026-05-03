@@ -3,7 +3,6 @@ layout: home
 title: java全栈
 titleTemplate: Java 全栈 + AI 实战博客
 hero:
-  name: "java全栈"
   text: "Java 后端、微服务、AI 应用与 Vibe Coding"
   tagline: "记录 Java 技术、AI 实战和 AI 编码提效的个人知识库。"
   actions:
