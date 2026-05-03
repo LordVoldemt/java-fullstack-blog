@@ -30,6 +30,9 @@
   --vp-c-brand-1: #56bcc8;
   --vp-c-brand-2: #87d7df;
   --vp-c-brand-3: #a8e6ec;
+  --vp-c-text-1: #e7eef2;
+  --vp-c-text-2: #b7c5cc;
+  --vp-c-text-3: #8e9ea7;
   --vp-home-hero-name-background: linear-gradient(
     135deg,
     #7ee6ee 0%,
@@ -44,9 +47,23 @@
     radial-gradient(circle at top right, rgba(239, 131, 84, 0.08), transparent 24%);
 }
 
+.dark .VPHome {
+  background:
+    radial-gradient(circle at top left, rgba(86, 188, 200, 0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 186, 138, 0.08), transparent 24%);
+}
+
 .VPHomeHero .text,
 .VPHomeHero .tagline {
   max-width: 48rem;
+}
+
+.dark .VPHomeHero .text,
+.dark .VPHomeHero .tagline,
+.dark .VPHomeHero .name,
+.dark .VPHomeHero .heading,
+.dark .VPHomeHero .description {
+  color: var(--vp-c-text-1);
 }
 
 .VPFeature {
@@ -59,6 +76,34 @@
   border-color: rgba(135, 215, 223, 0.16);
   background: linear-gradient(180deg, rgba(22, 28, 34, 0.98), rgba(26, 33, 39, 0.98));
   box-shadow: none;
+}
+
+.dark .VPFeature .title,
+.dark .VPFeature .details,
+.dark .VPFeature .link-text,
+.dark .vp-doc,
+.dark .vp-doc p,
+.dark .vp-doc li,
+.dark .vp-doc strong {
+  color: var(--vp-c-text-1);
+}
+
+.dark .vp-doc a {
+  color: var(--vp-c-brand-2);
+}
+
+.dark .vp-doc blockquote {
+  background: rgba(86, 188, 200, 0.12);
+}
+
+.dark .VPButton.brand {
+  color: #062126;
+}
+
+.dark .VPButton.alt {
+  border-color: rgba(135, 215, 223, 0.24);
+  background: rgba(23, 32, 38, 0.88);
+  color: var(--vp-c-text-1);
 }
 
 .vp-doc h1,
