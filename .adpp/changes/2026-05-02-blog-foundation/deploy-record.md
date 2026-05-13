@@ -62,3 +62,23 @@
 - Open GitHub repository settings and enable `Pages`
 - Set `Build and deployment > Source` to `GitHub Actions`
 - Re-run the failed workflow or push a new commit to `main`
+
+## Deployment Attempt - 2026-05-13
+
+- Commit pushed to `main`: `1be7e41 docs: add java basics presentation`
+- Scope:
+  - Added the Java basics dynamic HTML presentation at `docs/public/presentations/java-basics-dynamic-presentation.html`
+  - Added an article entry link in `docs/java/basics/java-basics-overview.md`
+  - Added presentation link styles in `docs/.vitepress/theme/custom.css`
+- Local verification:
+  - `npm run docs:build` passed before push
+  - Local presentation URL returned `200`: `/presentations/java-basics-dynamic-presentation.html`
+- Publish command:
+  - `.\scripts\deploy.ps1 -Message "docs: add java basics presentation"`
+- Push result:
+  - `main` pushed to `https://github.com/LordVoldemt/java-fullstack-blog.git`
+- Production check immediately after push:
+  - Existing article URL returned `200`
+  - New presentation URL still returned `404`, likely because GitHub Actions / Pages deployment had not completed yet
+- Notes:
+  - `npm run deploy -- --Message ...` failed locally because `powershell` was not available on `PATH`; direct PowerShell script execution succeeded
