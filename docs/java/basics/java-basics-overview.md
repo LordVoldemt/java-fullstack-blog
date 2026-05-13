@@ -1,5 +1,17 @@
 # Java 基础入门：语法、对象、异常、泛型、注解、I/O 到底怎么学才不乱
 
+<a class="presentation-link" href="/presentations/java-basics-dynamic-presentation.html" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" role="img">
+      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8A2.5 2.5 0 0 1 17.5 16H13v2.4l3.1 1.55a1 1 0 0 1-.9 1.8L12 20.15l-3.2 1.6a1 1 0 0 1-.9-1.8L11 18.4V16H6.5A2.5 2.5 0 0 1 4 13.5v-8Zm2.5-.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11Zm2.25 3.25a1 1 0 0 1 1-1h4.5a1 1 0 1 1 0 2h-4.5a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h2.5a1 1 0 1 1 0 2h-2.5a1 1 0 0 1-1-1Z" />
+    </svg>
+  </span>
+  <span>
+    <strong>打开 Java 基础动态演示</strong>
+    <small>47 页浏览器幻灯片，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多人学 Java 时都会有一种错觉：只要会写 `Spring Boot` 接口、会连数据库、能把项目跑起来，Java 基础就算过关了。
 
 可一旦进入真实开发，问题很快就会暴露出来：

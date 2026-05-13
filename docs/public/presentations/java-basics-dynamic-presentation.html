@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Java 基础学习地图</title>
+  <style>
+    :root {
+      --paper: #f7f3ea;
+      --ink: #17211f;
+      --muted: #5a6763;
+      --line: #d8d0c1;
+      --grid: rgba(20, 125, 118, .075);
+      --blue: #2f5f9f;
+      --cyan: #147d76;
+      --red: #df654a;
+      --gold: #e8b931;
+      --green: #147d76;
+      --violet: #7a6fb0;
+      --white: #fffdf8;
+      --panel: #fffdf8;
+      --shadow: 0 24px 70px rgba(23, 33, 31, .14);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        linear-gradient(rgba(20, 125, 118, .055) 1px, transparent 1px),
+        var(--paper);
+      background-size: 44px 44px;
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(23, 33, 31, .55) 1px, transparent 0);
+      background-size: 18px 18px;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto 6vw 7vh auto;
+      width: 180px;
+      height: 180px;
+      pointer-events: none;
+      opacity: .10;
+      background:
+        linear-gradient(135deg, transparent 46%, var(--blue) 47% 53%, transparent 54%),
+        linear-gradient(45deg, transparent 46%, var(--gold) 47% 53%, transparent 54%);
+      transform: rotate(8deg);
+    }
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100%;
+      height: 6px;
+      background: rgba(58,49,47,.08);
+    }
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--gold), var(--red), var(--violet));
+      transition: width .25s ease;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      align-content: center;
+      padding: clamp(28px, 5vw, 72px);
+      opacity: 0;
+      transform: translateX(64px) translateY(10px) rotate(.35deg) scale(.985);
+      transition: opacity .42s ease, transform .42s cubic-bezier(.2,.82,.22,1);
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+    }
+    .slide.previous { transform: translateX(-64px) translateY(-8px) rotate(-.35deg) scale(.985); }
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 42px auto auto 42px;
+      width: 120px;
+      height: 10px;
+      border-radius: 999px;
+      opacity: .65;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      z-index: -1;
+    }
+    .tone-hero { --accent: var(--blue); }
+    .tone-blue { --accent: var(--blue); }
+    .tone-red { --accent: var(--red); }
+    .tone-green { --accent: var(--green); }
+    .tone-gold { --accent: var(--gold); }
+    .tone-violet { --accent: var(--violet); }
+    .stage {
+      width: min(1050px, 100%);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
+      gap: clamp(28px, 5vw, 64px);
+      align-items: center;
+    }
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      font-size: clamp(13px, 1.4vw, 16px);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .label::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      background: var(--accent);
+    }
+    h1, h2 {
+      margin: 0;
+      max-width: 1000px;
+      line-height: 1.08;
+      letter-spacing: 0;
+      font-family: Georgia, "Times New Roman", "Noto Serif CJK SC", serif;
+      font-weight: 800;
+    }
+    h1 { font-size: clamp(42px, 7vw, 92px); }
+    h2 { font-size: clamp(30px, 4.8vw, 64px); }
+    h3 {
+      margin: 22px 0 8px;
+      font-size: clamp(19px, 2vw, 28px);
+    }
+    .lead, p, li, td, th {
+      font-size: clamp(16px, 1.7vw, 22px);
+      line-height: 1.62;
+    }
+    .lead, p, li { color: var(--muted); }
+    .content {
+      display: grid;
+      gap: 16px;
+      margin-top: 32px;
+      padding-right: 8px;
+    }
+    .content > p {
+      border-left: 8px solid var(--accent);
+      background: rgba(255,253,248,.82);
+      padding: 16px 20px;
+      box-shadow: 8px 8px 0 rgba(23,33,31,.08);
+    }
+    .mark {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: var(--white);
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 800;
+      box-shadow: 12px 12px 0 rgba(23,33,31,.14);
+      transform: rotate(-2deg);
+    }
+    .mark::before,
+    .mark::after {
+      content: "";
+      position: absolute;
+      border: 2px solid var(--ink);
+      pointer-events: none;
+    }
+    .mark::before { inset: 24px; }
+    .mark::after {
+      width: 68%;
+      height: 68%;
+      border-radius: 50%;
+      border-color: var(--red);
+    }
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+    .hero-points span {
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: var(--white);
+      color: var(--ink);
+      padding: 10px 14px;
+      font-weight: 800;
+      box-shadow: 5px 5px 0 rgba(23,33,31,.10);
+    }
+    .code {
+      margin: 0;
+      max-height: 52vh;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: #101816;
+      color: #f2e7c9;
+      padding: 18px;
+      font-size: clamp(13px, 1.25vw, 16px);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      box-shadow: var(--shadow);
+      border-top: 7px solid var(--accent);
+    }
+    .accent-code::before {
+      content: "CODE";
+      display: block;
+      color: #9ed4c8;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: 0;
+    }
+    .table-wrap {
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      box-shadow: var(--shadow);
+      background: var(--white);
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 11px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: color-mix(in srgb, var(--accent) 16%, white);
+      color: var(--ink);
+    }
+    tr:nth-child(even) td { background: rgba(35,95,150,.035); }
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+      list-style: none;
+      padding-left: 0;
+      border-left: 0;
+      background: transparent;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-right: 0;
+      box-shadow: none;
+    }
+    li {
+      min-height: 86px;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: var(--white);
+      padding: 16px 18px;
+      box-shadow: 8px 8px 0 rgba(23,33,31,.10);
+      position: relative;
+    }
+    li::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 14%, white);
+    }
+    li {
+      padding-left: 38px;
+    }
+    blockquote {
+      margin: 0;
+      border-left: 8px solid var(--accent);
+      background: rgba(255,253,248,.82);
+      padding: 16px 20px;
+      color: var(--ink);
+      font-size: clamp(19px, 2vw, 28px);
+      font-weight: 700;
+    }
+    code {
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, white);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    pre code { color: inherit; background: transparent; padding: 0; }
+    .nav, .footer {
+      position: fixed;
+      z-index: 20;
+      bottom: 18px;
+    }
+    .nav { left: 22px; display: flex; gap: 8px; }
+    button {
+      width: 42px;
+      height: 42px;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: var(--white);
+      color: var(--ink);
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 rgba(23,33,31,.14);
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    button:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0 rgba(23,33,31,.18);
+      background: color-mix(in srgb, var(--accent) 10%, white);
+    }
+    .footer {
+      right: 22px;
+      color: var(--muted);
+      background: rgba(255,255,255,.84);
+      border-radius: 0;
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+    .fragment {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .28s ease, transform .28s ease;
+    }
+    .fragment.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .slide.active .fragment.show:nth-child(2) { transition-delay: .03s; }
+    .slide.active .fragment.show:nth-child(3) { transition-delay: .08s; }
+    .slide.active .fragment.show:nth-child(4) { transition-delay: .13s; }
+    .slide.active .fragment.show:nth-child(5) { transition-delay: .18s; }
+    .slide.active .fragment.show:nth-child(6) { transition-delay: .23s; }
+    @keyframes pulseMark {
+      0%, 100% { transform: rotate(-2deg) scale(1); }
+      50% { transform: rotate(1deg) scale(1.025); }
+    }
+    .slide.active .mark { animation: pulseMark 5s ease-in-out infinite; }
+    @media (max-width: 820px) {
+      html, body { overflow: auto; }
+      .slide { min-height: 100vh; padding: 52px 18px 90px; }
+      .slide::before {
+        inset: 34px 12px 74px;
+        width: auto;
+        height: auto;
+        transform: none;
+        border-radius: 28px;
+      }
+      .hero { grid-template-columns: 1fr; }
+      .mark { max-width: 260px; margin: 0 auto; }
+      .content { max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress"><span id="progressBar"></span></div>
+  <main>
+    
+    <section class="slide active tone-hero">
+      <div class="stage hero">
+        <div>
+          <div class="label">Java Basics Briefing</div>
+          <h1>Java 基础学习地图</h1>
+          <p class="lead fragment">把 Java 语法、对象、异常、泛型、注解和 I/O 串成一套可讲解的基础地图。</p>
+          <div class="hero-points fragment">
+            <span>为什么这个对象要这样设计</span>
+            <span>为什么这个异常会一路向外抛</span>
+            <span>为什么泛型一到源码就看不懂</span>
+          </div>
+        </div>
+        <div class="mark" aria-hidden="true">JAVA</div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-cards">
+      <div class="stage">
+        <div class="label">Section 01</div>
+        <h2>概览</h2>
+        <div class="content">
+          <p class="fragment">很多人学 Java 时都会有一种错觉：只要会写 <code>Spring Boot</code> 接口、会连数据库、能把项目跑起来，Java 基础就算过关了。</p>
+<p class="fragment">可一旦进入真实开发，问题很快就会暴露出来：</p>
+<ul class="fragment list-panel"><li>为什么这个对象要这样设计</li><li>为什么这个异常会一路向外抛</li><li>为什么泛型一到源码就看不懂</li><li>为什么文件上传、网络通信、流式处理总觉得绕</li></ul>
+<p class="fragment">这些问题表面上分散在语法、面向对象、异常、泛型、反射、注解、I/O 等不同模块里；实际上，它们共同指向一件事：你对 Java 这门语言的基础模型是否真的理解清楚。</p>
+<p class="fragment">这篇文章不是把所有知识点重新讲一遍，而是帮你建立一张更适合初学者和后端开发的 Java 基础地图。你看完后，至少应该知道：</p>
+<ul class="fragment list-panel"><li>Java 基础到底包含哪些部分</li><li>哪些知识点最值得优先掌握</li><li>它们在真实项目里怎么出现</li><li>为什么很多中高级问题最后都会绕回基础</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-cards">
+      <div class="stage">
+        <div class="label">Section 02</div>
+        <h2>Java 基础到底是干嘛的</h2>
+        <div class="content">
+          <p class="fragment">如果用最直白的话来讲，Java 基础就是你以后写所有 Java 项目的“地基”。</p>
+<p class="fragment">它决定了三件事：</p>
+<ul class="fragment list-panel"><li>你能不能看懂框架和源码</li><li>你能不能写出结构清晰的业务代码</li><li>你能不能在出问题时定位问题，而不是只会改表象</li></ul>
+<p class="fragment">✅ <strong>建议你先建立一个正确预期</strong>：</p>
+<ul class="fragment list-panel"><li>Java 基础不是为了做几道练习题</li><li>也不是为了只在面试时背概念</li><li>它是你以后写 <code>Spring</code>、并发、JVM、微服务时反复会用到的东西</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-standard">
+      <div class="stage">
+        <div class="label">Section 03</div>
+        <h2>Java 基础适合在哪些场景用 · 1</h2>
+        <div class="content">
+          <p class="fragment">很多初学者会问：这些基础知识到底会在哪里用到？</p>
+<p class="fragment">答案是：几乎 everywhere。</p>
+<p class="fragment">例如：</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-cards">
+      <div class="stage">
+        <div class="label">Section 04</div>
+        <h2>Java 基础适合在哪些场景用 · 2</h2>
+        <div class="content">
+          <ul class="fragment list-panel"><li>写接口时，你会用到对象、异常、字符串、集合</li><li>写工具类时，你会用到泛型、静态方法、封装</li><li>学 <code>Spring</code> 时，你会接触注解、反射、依赖注入</li><li>做文件上传下载时，你会用到 I/O</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 05</div>
+        <h2>Java 基础适合在哪些场景用 · 3</h2>
+        <div class="content">
+          <ul class="fragment list-panel"><li>看源码时，你会遇到泛型、集合、设计模式</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-standard">
+      <div class="stage">
+        <div class="label">Section 06</div>
+        <h2>Java 基础适合在哪些场景用 · 4</h2>
+        <div class="content">
+          <p class="fragment">也就是说，Java 基础不是某一个专题，而是贯穿整条技术路线的底层能力。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-standard">
+      <div class="stage">
+        <div class="label">Section 07</div>
+        <h2>先把地图看清：Java 基础主要包含什么 · 1</h2>
+        <div class="content">
+          <p class="fragment">如果按后端开发视角来拆，Java 基础至少可以分成下面几层：</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-table">
+      <div class="stage">
+        <div class="label">Section 08</div>
+        <h2>先把地图看清：Java 基础主要包含什么 · 2</h2>
+        <div class="content">
+          <div class="table-wrap fragment"><table class="table"><thead><tr><th>模块</th><th>它主要解决什么问题</th><th>你可以怎么理解</th></tr></thead><tbody><tr><td>语法与流程控制</td><td>程序怎么写、怎么执行</td><td>写代码的基本表达能力</td></tr><tr><td>面向对象</td><td>类和对象怎么组织</td><td>建模能力</td></tr><tr><td>异常机制</td><td>错误如何传递和处理</td><td>程序出错时的边界管理</td></tr><tr><td>泛型</td><td>类型如何更安全地约束</td><td>编译期类型保护</td></tr><tr><td>反射与注解</td><td>程序如何动态工作</td><td>理解框架的关键</td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-table">
+      <div class="stage">
+        <div class="label">Section 09</div>
+        <h2>先把地图看清：Java 基础主要包含什么 · 3</h2>
+        <div class="content">
+          <div class="table-wrap fragment"><table class="table"><thead><tr><th>模块</th><th>它主要解决什么问题</th><th>你可以怎么理解</th></tr></thead><tbody><tr><td>I/O</td><td>文件和数据流如何读写</td><td>外部资源访问基础</td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 10</div>
+        <h2>先把地图看清：Java 基础主要包含什么 · 4</h2>
+        <div class="content">
+          <p class="fragment">如果你刚开始学，不要试图一口气吃透所有细节，先知道“每块在解决什么问题”，会顺很多。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-cards">
+      <div class="stage">
+        <div class="label">Section 11</div>
+        <h2>语法与流程控制：这是最表层，但不能轻视</h2>
+        <div class="content">
+          <p class="fragment">这一层看起来最简单，包含：</p>
+<ul class="fragment list-panel"><li>变量</li><li>基本类型</li><li>引用类型</li><li><code>if/else</code></li><li><code>for/while</code></li><li>方法</li><li>数组</li><li>字符串</li></ul>
+<p class="fragment">很多人会觉得这些太基础，不值得花时间。可真实项目里很多 bug 恰恰出在这些“看起来简单”的地方。</p>
+<p class="fragment">例如最常见的几个问题：</p>
+<ul class="fragment list-panel"><li><code>==</code> 和 <code>equals()</code> 混用</li><li><code>null</code> 判断不严谨</li><li>字符串拼接方式不合理</li><li>方法参数边界没处理</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-standard">
+      <div class="stage">
+        <div class="label">Section 12</div>
+        <h2>一个很典型的例子</h2>
+        <div class="content">
+          <h3>一个很典型的例子</h3>
+<pre class="code fragment accent-code"><code>public class StringCompareDemo {
+
+    public static void main(String[] args) {
+        String a = new String(&quot;java&quot;);
+        String b = new String(&quot;java&quot;);
+
+        // == 比较的是地址
+        System.out.println(a == b); // false
+
+        // equals 比较的是内容
+        System.out.println(a.equals(b)); // true
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-standard">
+      <div class="stage">
+        <div class="label">Section 13</div>
+        <h2>初学者要记住什么</h2>
+        <div class="content">
+          <h3>初学者要记住什么</h3>
+<ul class="fragment list-panel"><li><code>==</code> 比较的是“是不是同一个对象”</li><li><code>equals()</code> 比较的是“内容是不是一样”</li></ul>
+<p class="fragment">⚠️ <strong>重点</strong>：这个问题在项目里极其常见，尤其是字符串、包装类和对象比较。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-cards">
+      <div class="stage">
+        <div class="label">Section 14</div>
+        <h2>面向对象：不是“会写类”，而是“会分职责”</h2>
+        <div class="content">
+          <p class="fragment">Java 的核心世界观仍然是面向对象。类、对象、封装、继承、多态，这些词大家都背过，但真正难的是“怎么用它们建模”。</p>
+<p class="fragment">你可以把面向对象理解成：<strong>把现实业务拆成职责清晰的小角色</strong>。</p>
+<p class="fragment">比如“订单下单”这个业务，不应该把所有逻辑都堆到一个类里，而是拆成：</p>
+<ul class="fragment list-panel"><li><code>OrderController</code>：接收请求</li><li><code>OrderService</code>：处理业务</li><li><code>OrderRepository</code>：存取数据</li><li><code>Order</code>：领域对象</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 15</div>
+        <h2>一个简单示例</h2>
+        <div class="content">
+          <h3>一个简单示例</h3>
+<pre class="code fragment accent-code"><code>class Order {
+    private Long id;
+    private String status;
+
+    public Order(Long id, String status) {
+        this.id = id;
+        this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+}
+
+class OrderService {
+
+    public void createOrder(Order order) {
+        System.out.println(&quot;创建订单：&quot; + order.getId());
+    }
+}
+
+public class OopDemo {
+    public static void main(String[] args) {
+        Order order = new Order(1001L, &quot;NEW&quot;);
+        OrderService orderService = new OrderService();
+        orderService.createOrder(order);
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-cards">
+      <div class="stage">
+        <div class="label">Section 16</div>
+        <h2>面向对象在真实项目里的流程</h2>
+        <div class="content">
+          <h3>面向对象在真实项目里的流程</h3>
+<ul class="fragment list-panel"><li>用户发起请求</li><li><code>Controller</code> 接收参数</li><li><code>Service</code> 处理业务逻辑</li><li><code>Repository/DAO</code> 操作数据库</li><li>返回处理结果</li></ul>
+<p class="fragment">ASCII 流程图：</p>
+<pre class="code fragment accent-code"><code>用户 → Controller → Service → Repository → 数据库</code></pre>
+<p class="fragment">✅ <strong>建议</strong>：初学阶段不要过度纠结设计模式，先把“一个类只干一类事”养成习惯。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-cards">
+      <div class="stage">
+        <div class="label">Section 17</div>
+        <h2>异常机制：不是为了 try-catch，而是为了让错误有结构</h2>
+        <div class="content">
+          <p class="fragment">很多初学者会写 <code>try-catch</code>，但不一定真的理解异常机制。</p>
+<p class="fragment">Java 异常的核心价值，不是“捕获错误”这么简单，而是让错误传递具备结构。</p>
+<p class="fragment">你至少要搞清楚：</p>
+<ul class="fragment list-panel"><li>什么是受检异常</li><li>什么是运行时异常</li><li>什么错误应该往外抛</li><li>什么错误应该在当前层处理</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-standard">
+      <div class="stage">
+        <div class="label">Section 18</div>
+        <h2>一个更适合初学者的业务示例</h2>
+        <div class="content">
+          <h3>一个更适合初学者的业务示例</h3>
+<pre class="code fragment accent-code"><code>class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(Long userId) {
+        super(&quot;用户不存在，userId=&quot; + userId);
+    }
+}
+
+class UserService {
+
+    public String getUserName(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException(&quot;userId 不能为空&quot;);
+        }
+
+        if (userId == 999L) {
+            throw new UserNotFoundException(userId);
+        }
+
+        return &quot;Tom&quot;;
+    }
+}
+
+public class ExceptionDemo {
+    public static void main(String[] args) {
+        UserService userService = new UserService();
+
+        try {
+            System.out.println(userService.getUserName(999L));
+        } catch (UserNotFoundException e) {
+            System.out.println(&quot;捕获到业务异常：&quot; + e.getMessage());
+        }
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-standard">
+      <div class="stage">
+        <div class="label">Section 19</div>
+        <h2>易踩坑</h2>
+        <div class="content">
+          <h3>易踩坑</h3>
+<ul class="fragment list-panel"><li>直接 <code>catch (Exception e)</code> 然后什么都不做</li><li>只抛 <code>RuntimeException(&quot;error&quot;)</code>，没有业务语义</li><li>明明是参数问题，却等到很后面才报错</li></ul>
+<p class="fragment">⚠️ <strong>重点</strong>：异常不是为了“让程序不报错”，而是为了“让错误更容易被定位和处理”。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 20</div>
+        <h2>泛型：它不是难点，而是“提前做类型保护”</h2>
+        <div class="content">
+          <p class="fragment">很多人一看到泛型就头大，其实你可以把它理解成：</p>
+<p class="fragment"><strong>在编译阶段就告诉程序：这里应该放什么类型的数据。</strong></p>
+<p class="fragment">比如下面这个例子：</p>
+<pre class="code fragment accent-code"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class GenericDemo {
+    public static void main(String[] args) {
+        List&lt;String&gt; names = new ArrayList&lt;&gt;();
+        names.add(&quot;Alice&quot;);
+        names.add(&quot;Bob&quot;);
+
+        for (String name : names) {
+            System.out.println(name);
+        }
+    }
+}</code></pre>
+<p class="fragment">这里的 <code>List&lt;String&gt;</code> 的意义是：</p>
+<ul class="fragment list-panel"><li>这个集合里应该存 <code>String</code></li><li>编译器会帮你拦住错误类型</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-standard">
+      <div class="stage">
+        <div class="label">Section 21</div>
+        <h2>传统写法 vs 泛型写法</h2>
+        <div class="content">
+          <h3>传统写法 vs 泛型写法</h3>
+<p class="fragment">#### 不推荐写法</p>
+<pre class="code fragment accent-code"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class RawTypeDemo {
+    public static void main(String[] args) {
+        List list = new ArrayList();
+        list.add(&quot;Tom&quot;);
+        list.add(123);
+
+        Object value = list.get(1);
+        System.out.println(value);
+    }
+}</code></pre>
+<p class="fragment">#### 推荐写法</p>
+<pre class="code fragment accent-code"><code>import java.util.ArrayList;
+import java.util.List;
+
+public class BetterGenericDemo {
+    public static void main(String[] args) {
+        List&lt;Integer&gt; scores = new ArrayList&lt;&gt;();
+        scores.add(95);
+        scores.add(88);
+
+        for (Integer score : scores) {
+            System.out.println(score);
+        }
+    }
+}</code></pre>
+<p class="fragment">✅ <strong>建议</strong>：先把“泛型是类型约束”这件事理解清楚，再慢慢深入 <code>? extends T</code>、<code>? super T</code>、类型擦除。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-cards">
+      <div class="stage">
+        <div class="label">Section 22</div>
+        <h2>反射与注解：为什么框架能“自动工作”</h2>
+        <div class="content">
+          <p class="fragment">很多初学者第一次学 <code>Spring</code> 时会好奇：</p>
+<ul class="fragment list-panel"><li>为什么加个注解就能注册 Bean</li><li>为什么框架能自动扫描类</li><li>为什么对象能自动注入</li></ul>
+<p class="fragment">这些背后离不开两块能力：</p>
+<ul class="fragment list-panel"><li>反射</li><li>注解</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-standard">
+      <div class="stage">
+        <div class="label">Section 23</div>
+        <h2>注解示例</h2>
+        <div class="content">
+          <h3>注解示例</h3>
+<pre class="code fragment accent-code"><code>import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+@interface LogExecution {
+}
+
+@LogExecution
+class UserApplicationService {
+}
+
+public class AnnotationDemo {
+    public static void main(String[] args) {
+        boolean hasAnnotation = UserApplicationService.class.isAnnotationPresent(LogExecution.class);
+        System.out.println(&quot;是否存在注解：&quot; + hasAnnotation);
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-standard">
+      <div class="stage">
+        <div class="label">Section 24</div>
+        <h2>反射示例</h2>
+        <div class="content">
+          <h3>反射示例</h3>
+<pre class="code fragment accent-code"><code>class User {
+    private String name = &quot;Alice&quot;;
+}
+
+public class ReflectionDemo {
+    public static void main(String[] args) throws Exception {
+        User user = new User();
+
+        // 获取字段
+        var field = User.class.getDeclaredField(&quot;name&quot;);
+        field.setAccessible(true);
+
+        // 读取字段值
+        Object value = field.get(user);
+        System.out.println(&quot;字段值：&quot; + value);
+    }
+}</code></pre>
+<p class="fragment">⚠️ <strong>重点</strong>：初学阶段不要求你大量手写反射，但一定要知道它为什么存在。因为现代 Java 框架大量依赖它。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-cards">
+      <div class="stage">
+        <div class="label">Section 25</div>
+        <h2>I/O：很多人跳过，工作后又反复踩坑</h2>
+        <div class="content">
+          <p class="fragment">I/O 往往是初学阶段最容易被跳过、工作后又最容易踩坑的部分。</p>
+<p class="fragment">它常出现在这些场景：</p>
+<ul class="fragment list-panel"><li>文件上传</li><li>文件下载</li><li>日志写入</li><li>读取配置文件</li><li>网络数据传输</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-standard">
+      <div class="stage">
+        <div class="label">Section 26</div>
+        <h2>一个完整、可运行的文件读取示例</h2>
+        <div class="content">
+          <h3>一个完整、可运行的文件读取示例</h3>
+<pre class="code fragment accent-code"><code>import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class IoDemo {
+    public static void main(String[] args) {
+        String filePath = &quot;test.txt&quot;;
+
+        // try-with-resources 可以自动关闭资源
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                // 逐行读取文件内容
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println(&quot;读取文件失败：&quot; + e.getMessage());
+        }
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-cards">
+      <div class="stage">
+        <div class="label">Section 27</div>
+        <h2>为什么这个例子重要</h2>
+        <div class="content">
+          <h3>为什么这个例子重要</h3>
+<p class="fragment">它帮你建立几个关键概念：</p>
+<ul class="fragment list-panel"><li>什么是资源</li><li>为什么要关闭资源</li><li>为什么 <code>try-with-resources</code> 更推荐</li><li>为什么 I/O 操作经常伴随异常处理</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-cards">
+      <div class="stage">
+        <div class="label">Section 28</div>
+        <h2>I/O 的基本流程</h2>
+        <div class="content">
+          <h3>I/O 的基本流程</h3>
+<ul class="fragment list-panel"><li>找到文件或资源</li><li>创建输入流 / 读取器</li><li>逐步读取数据</li><li>处理数据</li><li>关闭资源</li></ul>
+<p class="fragment">ASCII 流程图：</p>
+<pre class="code fragment accent-code"><code>文件 → 输入流/读取器 → 程序处理 → 输出结果</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-standard">
+      <div class="stage">
+        <div class="label">Section 29</div>
+        <h2>一个真实业务例子：用户查询接口为什么会暴露基础问题 · 1</h2>
+        <div class="content">
+          <p class="fragment">下面是一段常见的业务代码：</p>
+<pre class="code fragment accent-code"><code>class User {
+    private Long id;
+    private String name;
+    private Integer age;
+
+    public User(Long id, String name, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+}
+
+class UserDTO {
+    private String name;
+    private Integer age;
+
+    public UserDTO(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;UserDTO{name=&#x27;&quot; + name + &quot;&#x27;, age=&quot; + age + &quot;}&quot;;
+    }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 30</div>
+        <h2>一个真实业务例子：用户查询接口为什么会暴露基础问题 · 2</h2>
+        <div class="content">
+          <p class="fragment">class UserRepository { public User findById(Long id) { if (id == 1L) { return new User(1L, &quot;Tom&quot;, 20); } return null; } }</p>
+<p class="fragment">class BetterUserService { private final UserRepository userRepository = new UserRepository();</p>
+<p class="fragment">public UserDTO getUser(Long id) { if (id == null) { throw new IllegalArgumentException(&quot;userId 不能为空&quot;); }</p>
+<p class="fragment">User user = userRepository.findById(id); if (user == null) { throw new UserNotFoundException(id); }</p>
+<p class="fragment">return new UserDTO(user.getName(), user.getAge()); } }</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-standard">
+      <div class="stage">
+        <div class="label">Section 31</div>
+        <h2>一个真实业务例子：用户查询接口为什么会暴露基础问题 · 3</h2>
+        <div class="content">
+          <p class="fragment">public class UserCaseDemo { public static void main(String[] args) { BetterUserService userService = new BetterUserService(); UserDTO userDTO = userService.getUser(1L); System.out.println(userDTO); } }</p>
+<pre class="code fragment accent-code"><code>
+这个例子里其实就用到了很多 Java 基础：</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-cards">
+      <div class="stage">
+        <div class="label">Section 32</div>
+        <h2>一个真实业务例子：用户查询接口为什么会暴露基础问题 · 4</h2>
+        <div class="content">
+          <ul class="fragment list-panel"><li>对象建模</li><li>异常处理</li><li>方法参数校验</li><li>DTO 转换</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-standard">
+      <div class="stage">
+        <div class="label">Section 33</div>
+        <h2>一个真实业务例子：用户查询接口为什么会暴露基础问题 · 5</h2>
+        <div class="content">
+          <ul class="fragment list-panel"><li><code>null</code> 处理</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-standard">
+      <div class="stage">
+        <div class="label">Section 34</div>
+        <h2>一个真实业务例子：用户查询接口为什么会暴露基础问题 · 6</h2>
+        <div class="content">
+          <p class="fragment">也就是说，基础并不是“写完练习题就结束”，而是每一行业务代码都会反复出现。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 35</div>
+        <h2>初学者最常见的几个误区</h2>
+        <div class="content">
+          <h3>误区一：基础学完了，以后只要学框架</h3>
+<p class="fragment">这是最常见的误解。框架不会替你解决基础问题，只会放大基础问题。你越往 <code>Spring</code>、并发、JVM 深处走，越会发现底层依然是类、对象、异常、反射、I/O 这些老朋友。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-standard">
+      <div class="stage">
+        <div class="label">Section 36</div>
+        <h2>误区二：能写 demo 就算掌握</h2>
+        <div class="content">
+          <h3>误区二：能写 demo 就算掌握</h3>
+<p class="fragment">很多知识点在 demo 里很简单，到了项目里却完全不同。比如 I/O，在 demo 里是读写一个文件，在项目里可能涉及大文件上传、编码问题、流关闭、异常处理、性能和安全。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-standard">
+      <div class="stage">
+        <div class="label">Section 37</div>
+        <h2>误区三：只记概念，不落到代码</h2>
+        <div class="content">
+          <h3>误区三：只记概念，不落到代码</h3>
+<p class="fragment">你可以背出封装、继承、多态的定义，但如果不能把一个需求拆成多个职责明确的类，那这些概念就没有真正变成能力。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-standard">
+      <div class="stage">
+        <div class="label">Section 38</div>
+        <h2>误区四：反射和泛型太难，先跳过</h2>
+        <div class="content">
+          <h3>误区四：反射和泛型太难，先跳过</h3>
+<p class="fragment">可以先不过度深入，但不能长期回避。因为它们直接关系到你能否理解现代 Java 框架和公共能力设计。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-cards">
+      <div class="stage">
+        <div class="label">Section 39</div>
+        <h2>常见问题</h2>
+        <div class="content">
+          <h3>1. Java 基础需要学到多深</h3>
+<p class="fragment">对于 <code>0~2</code> 年经验开发者，至少要做到：</p>
+<ul class="fragment list-panel"><li>会写清晰的方法和类</li><li>理解异常处理基本边界</li><li>会用泛型和常见集合</li><li>知道注解、反射、I/O 是怎么回事</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 40</div>
+        <h2>2. 是先学基础还是先学框架</h2>
+        <div class="content">
+          <h3>2. 是先学基础还是先学框架</h3>
+<p class="fragment">✅ <strong>建议</strong>：两条线可以并行，但基础一定不能丢。最好的方式是边学框架边回头补基础。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-standard">
+      <div class="stage">
+        <div class="label">Section 41</div>
+        <h2>3. 为什么我感觉基础知识学了又忘</h2>
+        <div class="content">
+          <h3>3. 为什么我感觉基础知识学了又忘</h3>
+<p class="fragment">因为只看概念，不写代码。基础一定要放进真实小场景里练，才能变成长期能力。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-green layout-standard">
+      <div class="stage">
+        <div class="label">Section 42</div>
+        <h2>面试常问问题</h2>
+        <div class="content">
+          <h3>1. <code>==</code> 和 <code>equals()</code> 有什么区别</h3>
+<p class="fragment"><code>==</code> 比较地址，<code>equals()</code> 默认比较内容语义，但是否真的比较内容，要看类有没有重写 <code>equals()</code>。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-gold layout-standard">
+      <div class="stage">
+        <div class="label">Section 43</div>
+        <h2>2. 什么是 Java 的值传递</h2>
+        <div class="content">
+          <h3>2. 什么是 Java 的值传递</h3>
+<p class="fragment">Java 只有值传递。传对象时，传递的是对象引用的副本。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-violet layout-standard">
+      <div class="stage">
+        <div class="label">Section 44</div>
+        <h2>3. 泛型有什么作用</h2>
+        <div class="content">
+          <h3>3. 泛型有什么作用</h3>
+<p class="fragment">泛型的核心作用是：在编译阶段做类型约束，提高代码安全性和可读性。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-blue layout-standard">
+      <div class="stage">
+        <div class="label">Section 45</div>
+        <h2>4. 为什么框架离不开反射</h2>
+        <div class="content">
+          <h3>4. 为什么框架离不开反射</h3>
+<p class="fragment">因为框架需要在运行时动态获取类、字段、方法和注解信息，才能完成自动装配、对象创建和扩展能力。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide tone-red layout-standard">
+      <div class="stage">
+        <div class="label">Section 46</div>
+        <h2>总结</h2>
+        <div class="content">
+          <p class="fragment">Java 基础最容易被低估，因为它看起来“老”“熟”“入门”。但真正做后端开发后你会发现，几乎所有复杂问题最终都会落回基础：类型、对象、异常、流、反射、边界。</p>
+<p class="fragment">如果你把基础学成一堆零散知识点，那么后续学习会越来越吃力；如果你把基础学成一套稳定的思维框架，那么无论是 <code>Spring Boot</code>、<code>MySQL</code>、<code>Redis</code>，还是 AI 应用开发，你都会走得更稳。</p>
+<p class="fragment">所以别把 Java 基础当成“学过就过去”的阶段。它不是起点之后就没用的台阶，它更像是整栋楼的地基。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <nav class="nav" aria-label="演示控制">
+    <button id="prevBtn" type="button" title="上一页">‹</button>
+    <button id="nextBtn" type="button" title="下一页">›</button>
+  </nav>
+  <div class="footer"><span id="counter">1 / 1</span> · ← → / 空格切换</div>
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progressBar = document.getElementById("progressBar");
+    const counter = document.getElementById("counter");
+    let index = 0;
+    let fragmentIndex = 0;
+    function fragments(slide) { return Array.from(slide.querySelectorAll(".fragment")); }
+    function update() {
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("active", slideIndex === index);
+        slide.classList.toggle("previous", slideIndex < index);
+        fragments(slide).forEach((item, itemIndex) => {
+          item.classList.toggle("show", slideIndex === index && itemIndex < fragmentIndex);
+        });
+      });
+      progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
+      counter.textContent = `${index + 1} / ${slides.length}`;
+    }
+    function next() {
+      const currentFragments = fragments(slides[index]);
+      if (fragmentIndex < currentFragments.length) { fragmentIndex += 1; update(); return; }
+      if (index < slides.length - 1) { index += 1; fragmentIndex = 0; update(); }
+    }
+    function prev() {
+      if (fragmentIndex > 0) { fragmentIndex -= 1; update(); return; }
+      if (index > 0) { index -= 1; fragmentIndex = fragments(slides[index]).length; update(); }
+    }
+    document.getElementById("prevBtn").addEventListener("click", prev);
+    document.getElementById("nextBtn").addEventListener("click", next);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") { event.preventDefault(); next(); }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") { event.preventDefault(); prev(); }
+      if (event.key === "Home") { index = 0; fragmentIndex = 0; update(); }
+      if (event.key === "End") { index = slides.length - 1; fragmentIndex = fragments(slides[index]).length; update(); }
+    });
+    update();
+  </script>
+</body>
+</html>
