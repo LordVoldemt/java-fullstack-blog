@@ -1,26 +1,5 @@
 # JVM 入门：类加载、内存区域、GC 到底是什么，为什么 Java 深度离不开它
 
-
-<a class="presentation-link" href="../../presentations/jvm-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
-<a class="presentation-link" href="../../presentations/jvm-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
 <a class="presentation-link" href="../../presentations/jvm-overview-ppt" target="_blank" rel="noopener">
   <span class="presentation-link__icon" aria-hidden="true">
     <span class="presentation-link__glyph">PPT</span>

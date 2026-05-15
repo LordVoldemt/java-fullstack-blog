@@ -1,6 +1,5 @@
 # AI 应用开发入门：从模型接入到 RAG、工具调用，Java 开发者到底该怎么落地
 
-
 <a class="presentation-link" href="../../presentations/ai-app-dev-overview-ppt" target="_blank" rel="noopener">
   <span class="presentation-link__icon" aria-hidden="true">
     <span class="presentation-link__glyph">PPT</span>
@@ -10,27 +9,6 @@
     <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
   </span>
 </a>
-
-<a class="presentation-link" href="../../presentations/ai-app-dev-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
-<a class="presentation-link" href="../../presentations/ai-app-dev-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
 
 如果说“大模型基础”回答的是“这些概念到底是什么”，那么“AI 应用开发”真正回答的问题则是：
 

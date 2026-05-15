@@ -1,6 +1,5 @@
 # Spring Cloud Alibaba 入门：Nacos、Feign、Gateway、Sentinel、Seata 到底怎么配合工作
 
-
 <a class="presentation-link" href="../../presentations/spring-cloud-alibaba-overview-ppt" target="_blank" rel="noopener">
   <span class="presentation-link__icon" aria-hidden="true">
     <span class="presentation-link__glyph">PPT</span>
@@ -10,27 +9,6 @@
     <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
   </span>
 </a>
-
-<a class="presentation-link" href="../../presentations/spring-cloud-alibaba-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
-<a class="presentation-link" href="../../presentations/spring-cloud-alibaba-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
 
 很多 Java 开发者第一次学微服务，都会有一种“组件名都认识，但系统还是看不懂”的感觉。
 

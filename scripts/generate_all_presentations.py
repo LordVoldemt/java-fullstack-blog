@@ -524,42 +524,36 @@ def build_presentation_link(path: Path, title: str, slug: str) -> str:
 def replace_or_insert_link(path: Path, slug: str, title: str) -> None:
     original = path.read_text(encoding="utf-8")
     link_block = build_presentation_link(path, title, slug)
+    cleaned = re.sub(r"\n*<a class=\"presentation-link\"[\s\S]*?</a>\s*", "\n\n", original)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
 
     updated = re.sub(
-        r'<a class="presentation-link"[\s\S]*?</a>',
+        r"??????????????????????????????\[[^\]]+\]\([^)]+\)??",
         link_block,
-        original,
+        cleaned,
         count=1,
     )
 
-    updated = re.sub(
-        r"如果你想先看一版可视化讲解，可以打开：\[[^\]]+\]\([^)]+\)。",
-        link_block,
-        updated,
-        count=1,
-    )
-
-    if updated == original:
-        frontmatter, body = strip_frontmatter(original)
+    if updated == cleaned:
+        frontmatter, body = strip_frontmatter(cleaned)
         del frontmatter
         if body.startswith("# "):
-            first_newline = original.find("\n")
-            insert_at = original.find("\n", first_newline + 1)
+            first_newline = cleaned.find("\n")
+            insert_at = cleaned.find("\n", first_newline + 1)
             if insert_at == -1:
-                insert_at = len(original)
-            updated = original[: insert_at + 1] + "\n" + link_block + "\n\n" + original[insert_at + 1 :].lstrip("\n")
+                insert_at = len(cleaned)
+            updated = cleaned[: insert_at + 1] + "\n" + link_block + "\n\n" + cleaned[insert_at + 1 :].lstrip("\n")
         else:
-            if original.startswith("---\n"):
-                parts = original.split("\n---\n", 1)
+            if cleaned.startswith("---\n"):
+                parts = cleaned.split("\n---\n", 1)
                 if len(parts) == 2:
                     updated = parts[0] + "\n---\n\n" + link_block + "\n\n" + parts[1].lstrip("\n")
                 else:
-                    updated = link_block + "\n\n" + original
+                    updated = link_block + "\n\n" + cleaned
             else:
-                updated = link_block + "\n\n" + original
+                updated = link_block + "\n\n" + cleaned
 
     path.write_text(updated, encoding="utf-8")
-
 
 def build_route_page(route_src: str) -> str:
     return f"""---

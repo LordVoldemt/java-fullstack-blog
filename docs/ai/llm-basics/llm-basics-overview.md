@@ -1,16 +1,5 @@
 # 大模型基础入门：Prompt、RAG、Embedding、MCP 到底是什么，一篇帮你彻底理清
 
-
-<a class="presentation-link" href="../../presentations/llm-basics-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
 <a class="presentation-link" href="../../presentations/llm-basics-overview-ppt" target="_blank" rel="noopener">
   <span class="presentation-link__icon" aria-hidden="true">
     <span class="presentation-link__glyph">PPT</span>
@@ -37,15 +26,6 @@
 - 一个最小的大模型应用是怎么跑起来的
 - 初学者最适合先学什么，后学什么
 
-<a class="presentation-link" href="../../presentations/llm-basics-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
 ## 如果你只想记住一条学习路线
 
 对初学者来说，我最推荐的顺序是：

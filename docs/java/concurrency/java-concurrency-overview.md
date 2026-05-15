@@ -1,26 +1,5 @@
 # Java 并发编程入门：线程、synchronized、volatile、线程池 到底怎么理解
 
-
-<a class="presentation-link" href="../../presentations/java-concurrency-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
-<a class="presentation-link" href="../../presentations/java-concurrency-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
 <a class="presentation-link" href="../../presentations/java-concurrency-overview-ppt" target="_blank" rel="noopener">
   <span class="presentation-link__icon" aria-hidden="true">
     <span class="presentation-link__glyph">PPT</span>

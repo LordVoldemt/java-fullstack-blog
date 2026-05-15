@@ -1,6 +1,5 @@
 # AI 项目实战入门：从模型 Demo 到可交付系统，中间到底差了什么
 
-
 <a class="presentation-link" href="../../presentations/ai-projects-overview-ppt" target="_blank" rel="noopener">
   <span class="presentation-link__icon" aria-hidden="true">
     <span class="presentation-link__glyph">PPT</span>
@@ -10,27 +9,6 @@
     <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
   </span>
 </a>
-
-<a class="presentation-link" href="../../presentations/ai-projects-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
-<a class="presentation-link" href="../../presentations/ai-projects-overview-ppt" target="_blank" rel="noopener">
-  <span class="presentation-link__icon" aria-hidden="true">
-    <span class="presentation-link__glyph">PPT</span>
-  </span>
-  <span>
-    <strong>打开文章演示版</strong>
-    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
-  </span>
-</a>
-
 
 很多人第一次做 AI 项目时，都会被一种“很快就有结果”的体验吸引。
 
