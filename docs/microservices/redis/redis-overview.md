@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/redis-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 只要你做过稍微复杂一点的后端项目，大概率都会接触 `Redis`。
 
 有人把它当缓存，有人拿它做计数器，有人用它做排行榜、会话存储、分布式锁，甚至有人拿它做消息队列和延迟任务。

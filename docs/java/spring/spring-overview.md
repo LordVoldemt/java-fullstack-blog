@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/spring-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 如果说 Java 后端开发里有哪个框架几乎绕不开，那大概率就是 Spring。
 
 无论是做传统企业应用，还是现代微服务开发，Spring 生态都深深嵌在日常工作里。

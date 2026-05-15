@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/learning-path-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多初学者都会有一种很真实的焦虑感：
 
 - 今天在学 Spring Boot

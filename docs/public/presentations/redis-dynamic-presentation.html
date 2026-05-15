@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redis 工程入门动态演示</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b10;
+      --bg-soft: #0d121a;
+      --panel: rgba(255, 255, 255, .075);
+      --panel-strong: rgba(255, 255, 255, .12);
+      --line: rgba(255, 255, 255, .16);
+      --text: #f4f7fb;
+      --muted: #aab6c7;
+      --dim: #657286;
+      --redis: #ff4f4f;
+      --amber: #ffb86b;
+      --cyan: #4de3ff;
+      --green: #57f2a7;
+      --blue: #77a7ff;
+      --violet: #b799ff;
+      --shadow: 0 30px 90px rgba(0, 0, 0, .45);
+      --radius: 8px;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255, 79, 79, .24), transparent 28%),
+        radial-gradient(circle at 78% 20%, rgba(77, 227, 255, .16), transparent 30%),
+        radial-gradient(circle at 52% 82%, rgba(87, 242, 167, .12), transparent 34%),
+        linear-gradient(135deg, #06070b 0%, #0b111a 48%, #120b10 100%);
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      opacity: .32;
+      background:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at 50% 42%, black 0 56%, transparent 84%);
+    }
+
+    body::after {
+      opacity: .18;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.65) 1px, transparent 0);
+      background-size: 19px 19px;
+      mix-blend-mode: screen;
+    }
+
+    a { color: inherit; }
+
+    .deck {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-snap-type: y mandatory;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      height: 3px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--redis), var(--amber), var(--cyan), var(--green));
+      box-shadow: 0 0 26px rgba(77, 227, 255, .55);
+      transition: width .35s var(--ease);
+    }
+
+    .hud {
+      position: fixed;
+      right: clamp(16px, 3vw, 34px);
+      bottom: clamp(14px, 3vw, 30px);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    .hud .counter {
+      min-width: 62px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      background: rgba(8, 11, 16, .5);
+      backdrop-filter: blur(16px);
+      text-align: center;
+    }
+
+    .nav {
+      position: fixed;
+      left: clamp(16px, 3vw, 34px);
+      bottom: clamp(14px, 3vw, 30px);
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--text);
+      background: rgba(255, 255, 255, .075);
+      backdrop-filter: blur(18px);
+      cursor: pointer;
+      transition: transform .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+    }
+
+    .nav button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(77, 227, 255, .55);
+      background: rgba(77, 227, 255, .12);
+    }
+
+    .slide {
+      position: relative;
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: grid;
+      place-items: center;
+      padding: clamp(58px, 7vw, 92px) clamp(20px, 5vw, 82px);
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 8vh 6vw;
+      z-index: -2;
+      border: 1px solid rgba(255,255,255,.07);
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.055), transparent 42%),
+        radial-gradient(circle at 70% 20%, var(--glow, rgba(255,79,79,.18)), transparent 38%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), var(--shadow);
+      transform: skewY(-.55deg);
+      opacity: .75;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: auto -14vw -22vh auto;
+      width: min(520px, 58vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow, rgba(255,79,79,.24)), transparent 68%);
+      filter: blur(5px);
+      opacity: .75;
+      z-index: -3;
+      transform: translate3d(0, calc(var(--scroll-shift, 0) * 18px), 0);
+    }
+
+    .slide.is-active .reveal {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .stage {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .stage-wide {
+      width: min(1320px, 100%);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--accent, var(--redis));
+      font-size: clamp(12px, 1vw, 14px);
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: currentColor;
+      box-shadow: 0 0 16px currentColor;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2 {
+      max-width: 1080px;
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      font-weight: 900;
+      line-height: .98;
+    }
+
+    h1 {
+      font-size: clamp(52px, 8vw, 126px);
+    }
+
+    h2 {
+      font-size: clamp(38px, 5.8vw, 86px);
+    }
+
+    h3 {
+      font-size: clamp(20px, 2.1vw, 30px);
+      line-height: 1.18;
+    }
+
+    .lead {
+      max-width: 780px;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 27px);
+      line-height: 1.62;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px) scale(.985);
+      filter: blur(10px);
+      transition: opacity .75s var(--ease), transform .75s var(--ease), filter .75s var(--ease);
+    }
+
+    .d1 { transition-delay: .08s; }
+    .d2 { transition-delay: .16s; }
+    .d3 { transition-delay: .24s; }
+    .d4 { transition-delay: .32s; }
+    .d5 { transition-delay: .40s; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(330px, 450px);
+      gap: clamp(38px, 7vw, 88px);
+      align-items: center;
+    }
+
+    .redis-orb {
+      position: relative;
+      min-height: 430px;
+      display: grid;
+      place-items: center;
+    }
+
+    .redis-orb .core {
+      position: relative;
+      width: min(360px, 76vw);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 34px;
+      background:
+        linear-gradient(155deg, rgba(255,79,79,.78), rgba(106,18,24,.52)),
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.34), transparent 26%);
+      box-shadow:
+        0 30px 100px rgba(255,79,79,.30),
+        inset 0 1px 0 rgba(255,255,255,.35);
+      transform: rotate(-8deg);
+      animation: floatCore 7s ease-in-out infinite;
+    }
+
+    .redis-orb .core::before,
+    .redis-orb .core::after {
+      content: "";
+      position: absolute;
+      inset: 20%;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 22px;
+      background: rgba(0,0,0,.18);
+      transform: translateY(-30px) translateX(18px);
+    }
+
+    .redis-orb .core::after {
+      inset: 34%;
+      transform: translateY(36px) translateX(-28px);
+      background: rgba(255,255,255,.12);
+    }
+
+    .ring {
+      position: absolute;
+      inset: 26px;
+      border: 1px solid rgba(77,227,255,.28);
+      border-radius: 50%;
+      animation: spinRing 18s linear infinite;
+    }
+
+    .ring:nth-child(2) {
+      inset: 72px;
+      border-color: rgba(255,184,107,.30);
+      animation-duration: 24s;
+      animation-direction: reverse;
+    }
+
+    .ring::before,
+    .ring::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 24px var(--cyan);
+    }
+
+    .ring::before { top: 12%; left: 12%; }
+    .ring::after { right: 14%; bottom: 18%; background: var(--amber); box-shadow: 0 0 24px var(--amber); }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(255,255,255,.075);
+      backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .icon {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 auto;
+      stroke: currentColor;
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      margin-top: 42px;
+    }
+
+    .card {
+      position: relative;
+      min-height: 190px;
+      padding: clamp(20px, 2.5vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.045)),
+        rgba(255,255,255,.045);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 18% 12%, color-mix(in srgb, var(--accent, var(--redis)) 28%, transparent), transparent 34%);
+      opacity: .85;
+      pointer-events: none;
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .metric {
+      display: grid;
+      gap: 10px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--text);
+      font-size: clamp(34px, 4.8vw, 70px);
+      line-height: .94;
+    }
+
+    .metric span,
+    .card p,
+    .step p {
+      color: var(--muted);
+      font-size: clamp(15px, 1.35vw, 18px);
+      line-height: 1.62;
+    }
+
+    .card h3 {
+      margin-bottom: 14px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+      margin-top: 46px;
+    }
+
+    .step {
+      position: relative;
+      min-height: 180px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.07);
+      overflow: hidden;
+    }
+
+    .step::after {
+      content: "";
+      position: absolute;
+      top: 48%;
+      right: -24px;
+      width: 46px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent, var(--cyan)), transparent);
+      box-shadow: 0 0 20px var(--accent, var(--cyan));
+    }
+
+    .step:last-child::after { display: none; }
+
+    .step-num {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      color: #061017;
+      background: var(--accent, var(--cyan));
+      font-weight: 900;
+      box-shadow: 0 0 28px color-mix(in srgb, var(--accent, var(--cyan)) 58%, transparent);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(360px, 1.12fr);
+      gap: clamp(30px, 5vw, 70px);
+      align-items: center;
+    }
+
+    .radar {
+      position: relative;
+      min-height: 560px;
+      display: grid;
+      place-items: center;
+    }
+
+    .radar svg {
+      width: min(620px, 100%);
+      height: auto;
+      filter: drop-shadow(0 24px 60px rgba(0,0,0,.55));
+    }
+
+    .radar-line {
+      stroke-dasharray: 900;
+      stroke-dashoffset: 900;
+      transition: stroke-dashoffset 1.6s var(--ease);
+    }
+
+    .is-active .radar-line { stroke-dashoffset: 0; }
+
+    .list {
+      display: grid;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.065);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--accent, var(--redis));
+      box-shadow: 0 0 22px var(--accent, var(--redis));
+    }
+
+    .list-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+    .list-item span {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .terminal {
+      border: 1px solid rgba(87,242,167,.24);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(3, 9, 8, .82);
+      box-shadow: 0 30px 90px rgba(0,0,0,.55), 0 0 80px rgba(87,242,167,.10);
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 14px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.055);
+    }
+
+    .terminal-bar span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--redis);
+    }
+
+    .terminal-bar span:nth-child(2) { background: var(--amber); }
+    .terminal-bar span:nth-child(3) { background: var(--green); }
+
+    pre {
+      margin: 0;
+      padding: 24px;
+      white-space: pre-wrap;
+      color: #cfffe5;
+      font-size: clamp(13px, 1.2vw, 16px);
+      line-height: 1.65;
+      font-family: "Cascadia Mono", "Consolas", "SFMono-Regular", monospace;
+    }
+
+    code { font-family: "Cascadia Mono", "Consolas", monospace; }
+
+    .highlight {
+      color: var(--accent, var(--cyan));
+      text-shadow: 0 0 24px color-mix(in srgb, var(--accent, var(--cyan)) 58%, transparent);
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 42px;
+    }
+
+    .lane {
+      min-height: 420px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.065);
+    }
+
+    .lane h3 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 56px;
+      gap: 14px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent, var(--cyan)), rgba(255,255,255,.7));
+      box-shadow: 0 0 18px var(--accent, var(--cyan));
+      transition: width 1s var(--ease) .25s;
+    }
+
+    .is-active .bar-fill { width: var(--value); }
+
+    .topology {
+      position: relative;
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+      margin-top: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(77,227,255,.13), transparent 40%),
+        rgba(255,255,255,.045);
+      overflow: hidden;
+    }
+
+    .topology svg {
+      width: min(980px, 100%);
+      height: auto;
+      overflow: visible;
+    }
+
+    .path {
+      stroke-dasharray: 420;
+      stroke-dashoffset: 420;
+      transition: stroke-dashoffset 1.25s var(--ease);
+    }
+
+    .is-active .path { stroke-dashoffset: 0; }
+
+    .node rect {
+      fill: rgba(255,255,255,.08);
+      stroke: rgba(255,255,255,.22);
+    }
+
+    .node text {
+      fill: #f7fbff;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .node .sub {
+      fill: #9daabd;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 40px;
+    }
+
+    .matrix .cell {
+      min-height: 180px;
+      padding: 22px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.06);
+    }
+
+    .matrix .cell svg {
+      color: var(--accent, var(--redis));
+      margin-bottom: 20px;
+    }
+
+    .matrix .cell strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .matrix .cell span {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .quote {
+      max-width: 960px;
+      margin-top: 34px;
+      padding-left: 28px;
+      border-left: 4px solid var(--accent, var(--redis));
+      color: var(--text);
+      font-size: clamp(24px, 3vw, 42px);
+      line-height: 1.28;
+      font-weight: 850;
+    }
+
+    .closing {
+      text-align: center;
+    }
+
+    .closing h2 {
+      margin-inline: auto;
+    }
+
+    .closing .lead {
+      margin-inline: auto;
+    }
+
+    .signal {
+      position: absolute;
+      width: 220px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(77,227,255,.75), transparent);
+      opacity: .45;
+      animation: signalScan 6s linear infinite;
+    }
+
+    .signal:nth-child(1) { top: 24%; left: 8%; }
+    .signal:nth-child(2) { top: 62%; right: 10%; animation-delay: -2s; }
+    .signal:nth-child(3) { bottom: 17%; left: 24%; animation-delay: -4s; }
+
+    @keyframes floatCore {
+      0%, 100% { transform: rotate(-8deg) translateY(0); }
+      50% { transform: rotate(-4deg) translateY(-18px); }
+    }
+
+    @keyframes spinRing {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes signalScan {
+      0% { transform: translateX(-80px) scaleX(.55); opacity: 0; }
+      18% { opacity: .42; }
+      70% { opacity: .28; }
+      100% { transform: translateX(150px) scaleX(1.25); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .deck {
+        height: auto;
+        overflow-y: visible;
+        scroll-snap-type: none;
+      }
+
+      .slide {
+        min-height: auto;
+        place-items: start;
+        padding: 72px 18px 96px;
+      }
+
+      .slide::before {
+        inset: 24px 10px;
+      }
+
+      .hero-grid,
+      .split,
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .redis-orb,
+      .radar {
+        min-height: 320px;
+      }
+
+      .bento,
+      .flow,
+      .matrix {
+        grid-template-columns: 1fr;
+      }
+
+      .span-3,
+      .span-4,
+      .span-5,
+      .span-6,
+      .span-7,
+      .span-8,
+      .span-12 {
+        grid-column: auto;
+      }
+
+      .step::after { display: none; }
+
+      .matrix .cell,
+      .card,
+      .lane {
+        min-height: auto;
+      }
+
+      .nav { display: none; }
+    }
+
+    @media (max-width: 560px) {
+      h1 {
+        font-size: clamp(40px, 12vw, 52px);
+        line-height: 1.04;
+      }
+
+      h2 {
+        font-size: clamp(34px, 10vw, 48px);
+        line-height: 1.08;
+      }
+
+      .hud {
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .pill-row {
+        gap: 8px;
+      }
+
+      .pill {
+        width: 100%;
+      }
+
+      .bar-row {
+        grid-template-columns: 72px 1fr 42px;
+      }
+
+      .terminal pre {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <nav class="nav" aria-label="演示导航">
+    <button id="prevBtn" type="button" title="上一页" aria-label="上一页">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <button id="nextBtn" type="button" title="下一页" aria-label="下一页">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+  </nav>
+  <div class="hud"><span class="counter" id="counter">01/12</span></div>
+
+  <main class="deck" id="deck">
+    <section class="slide" data-accent="#ff4f4f" style="--accent: var(--redis); --glow: rgba(255,79,79,.25);">
+      <span class="signal"></span><span class="signal"></span><span class="signal"></span>
+      <div class="stage hero-grid">
+        <div>
+          <div class="kicker reveal">Redis Engineering Briefing</div>
+          <h1 class="reveal d1">Redis 不是缓存。它是高性能状态层。</h1>
+          <p class="lead reveal d2">从缓存、计数器、排行榜到分布式锁，Redis 的价值不是“快”这么简单，而是在数据库和应用之间放下一层可控、轻量、可建模的状态系统。</p>
+          <div class="pill-row reveal d3">
+            <span class="pill"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/><path d="M7 4v16"/></svg>缓存</span>
+            <span class="pill"><svg class="icon" viewBox="0 0 24 24"><path d="M12 20V10"/><path d="m18 14-6-6-6 6"/></svg>计数</span>
+            <span class="pill"><svg class="icon" viewBox="0 0 24 24"><path d="M17 11V7a5 5 0 0 0-10 0v4"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg>分布式锁</span>
+            <span class="pill"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18h16"/><path d="M7 14v4"/><path d="M12 10v8"/><path d="M17 6v12"/></svg>排行榜</span>
+          </div>
+        </div>
+        <div class="redis-orb reveal d2" aria-hidden="true">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="core"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#4de3ff" style="--accent: var(--cyan); --glow: rgba(77,227,255,.20);">
+      <div class="stage">
+        <div class="kicker reveal">The Tension</div>
+        <h2 class="reveal d1">项目刚开始，Redis 看起来只是“加个缓存”。流量一上来，它变成系统稳定性的考题。</h2>
+        <div class="bento">
+          <article class="card span-4 reveal d2">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M12 3v18"/><circle cx="12" cy="12" r="8"/></svg>
+            <h3>命中率不稳</h3>
+            <p>缓存策略不清晰，Redis 并不会自然提速，反而可能制造额外路径。</p>
+          </article>
+          <article class="card span-4 reveal d3" style="--accent: var(--amber);">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M10.3 3.7 2.8 18a2 2 0 0 0 1.8 3h14.8a2 2 0 0 0 1.8-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <h3>回源风暴</h3>
+            <p>热点 key 失效、大量 key 集中过期、无效请求穿透，都可能把数据库打满。</p>
+          </article>
+          <article class="card span-4 reveal d4" style="--accent: var(--green);">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <h3>边界被低估</h3>
+            <p>分布式锁不是一个 setnx。过期、续期、释放、误删都在考验工程边界。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#57f2a7" style="--accent: var(--green); --glow: rgba(87,242,167,.18);">
+      <div class="stage">
+        <div class="kicker reveal">Mental Model</div>
+        <h2 class="reveal d1">先把地图看清：Redis 不是替代数据库，而是补齐数据库前方的高频状态能力。</h2>
+        <div class="matrix">
+          <div class="cell reveal d2">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
+            <strong>缓存</strong>
+            <span>给热点数据加速，降低数据库压力。</span>
+          </div>
+          <div class="cell reveal d3" style="--accent: var(--cyan);">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 20V4"/><path d="m6 10 6-6 6 6"/></svg>
+            <strong>计数器</strong>
+            <span>承接点赞、浏览量、库存等高并发统计。</span>
+          </div>
+          <div class="cell reveal d4" style="--accent: var(--amber);">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 18h18"/><path d="M7 14v4"/><path d="M12 10v8"/><path d="M17 6v12"/></svg>
+            <strong>排行榜</strong>
+            <span>用 Sorted Set 做快速排序和 Top N。</span>
+          </div>
+          <div class="cell reveal d5" style="--accent: var(--violet);">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            <strong>分布式锁</strong>
+            <span>跨服务互斥，控制全局资源访问。</span>
+          </div>
+          <div class="cell reveal d5" style="--accent: var(--blue);">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 7-6 12-6 12S6 16 6 9Z"/><circle cx="12" cy="9" r="2"/></svg>
+            <strong>共享状态</strong>
+            <span>多个服务实例之间共享轻量、短期状态。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#ffb86b" style="--accent: var(--amber); --glow: rgba(255,184,107,.20);">
+      <div class="stage stage-wide">
+        <div class="kicker reveal">Why Fast</div>
+        <h2 class="reveal d1">Redis 的快，不只是“内存比磁盘快”。它是一整套面向高频读写的取舍。</h2>
+        <div class="bento">
+          <article class="card span-3 metric reveal d2">
+            <strong>Memory</strong>
+            <p>基于内存操作，避开大部分磁盘访问成本。</p>
+          </article>
+          <article class="card span-3 metric reveal d3" style="--accent: var(--cyan);">
+            <strong>Simple</strong>
+            <p>数据结构直接，命令语义贴近业务建模。</p>
+          </article>
+          <article class="card span-3 metric reveal d4" style="--accent: var(--green);">
+            <strong>Single</strong>
+            <p>单线程执行模型减少锁竞争和上下文切换。</p>
+          </article>
+          <article class="card span-3 metric reveal d5" style="--accent: var(--violet);">
+            <strong>Network</strong>
+            <p>网络模型和实现细节为高吞吐服务。</p>
+          </article>
+          <article class="card span-12 reveal d5" style="--accent: var(--redis);">
+            <p class="quote">数据库像大仓库，稳、全、重；Redis 像前台小货架，只放高频物品，拿取极快。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#77a7ff" style="--accent: var(--blue); --glow: rgba(119,167,255,.18);">
+      <div class="stage">
+        <div class="kicker reveal">Cache Path</div>
+        <h2 class="reveal d1">缓存真正的核心不是“查 Redis”，而是控制命中、回源和失效后的秩序。</h2>
+        <div class="flow">
+          <div class="step reveal d2">
+            <span class="step-num">1</span>
+            <h3>用户请求</h3>
+            <p>请求进入应用服务，先判断是否适合走缓存路径。</p>
+          </div>
+          <div class="step reveal d3">
+            <span class="step-num">2</span>
+            <h3>查 Redis</h3>
+            <p>命中则直接返回，把数据库从热点读中解放出来。</p>
+          </div>
+          <div class="step reveal d4">
+            <span class="step-num">3</span>
+            <h3>未命中</h3>
+            <p>缓存没有结果时，进入回源逻辑。</p>
+          </div>
+          <div class="step reveal d5">
+            <span class="step-num">4</span>
+            <h3>查数据库</h3>
+            <p>取到权威数据，同时处理空值、异常和边界。</p>
+          </div>
+          <div class="step reveal d5">
+            <span class="step-num">5</span>
+            <h3>写回缓存</h3>
+            <p>设置合理 TTL，避免下一次相同请求重复打到数据库。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#b799ff" style="--accent: var(--violet); --glow: rgba(183,153,255,.20);">
+      <div class="stage split">
+        <div>
+          <div class="kicker reveal">Data Structures</div>
+          <h2 class="reveal d1">Redis 不只是 Key-Value。它让你用更接近业务语义的方式建模。</h2>
+          <div class="list">
+            <div class="list-item reveal d2"><span class="dot"></span><div><strong>String</strong><span>简单缓存、计数器、库存、浏览量。</span></div></div>
+            <div class="list-item reveal d3"><span class="dot"></span><div><strong>Hash</strong><span>用户会话、对象字段、轻量资料。</span></div></div>
+            <div class="list-item reveal d4"><span class="dot"></span><div><strong>Set</strong><span>点赞用户、去重集合、交并差关系。</span></div></div>
+            <div class="list-item reveal d5"><span class="dot"></span><div><strong>Sorted Set</strong><span>积分榜、热门文章、销量排行。</span></div></div>
+          </div>
+        </div>
+        <div class="terminal reveal d3">
+          <div class="terminal-bar"><span></span><span></span><span></span></div>
+          <pre><code>SET view:article:1001 1
+ INCR view:article:1001
+
+ HSET session:user:42 name "Alice" role "admin"
+
+ SADD like:article:1001 user:7 user:9
+
+ ZADD rank:post 986 "Redis 入门"
+ ZREVRANGE rank:post 0 9 WITHSCORES</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#ff4f4f" style="--accent: var(--redis); --glow: rgba(255,79,79,.25);">
+      <div class="stage split">
+        <div>
+          <div class="kicker reveal">Cache Risk Radar</div>
+          <h2 class="reveal d1">缓存系统最危险的地方，是它出问题时会把压力重新推回数据库。</h2>
+          <p class="lead reveal d2">穿透、击穿、雪崩不是三个面试词，而是三种真实的流量失控方式。</p>
+        </div>
+        <div class="radar reveal d3" aria-label="缓存风险雷达图">
+          <svg viewBox="0 0 520 520" role="img">
+            <defs>
+              <radialGradient id="riskGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(255,79,79,.42)" />
+                <stop offset="72%" stop-color="rgba(255,79,79,.06)" />
+                <stop offset="100%" stop-color="rgba(255,79,79,0)" />
+              </radialGradient>
+              <filter id="softGlow">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <circle cx="260" cy="260" r="214" fill="url(#riskGlow)" />
+            <circle cx="260" cy="260" r="210" fill="none" stroke="rgba(255,255,255,.10)" />
+            <circle cx="260" cy="260" r="150" fill="none" stroke="rgba(255,255,255,.11)" />
+            <circle cx="260" cy="260" r="90" fill="none" stroke="rgba(255,255,255,.12)" />
+            <path d="M260 48v424M48 260h424M110 110l300 300M410 110 110 410" stroke="rgba(255,255,255,.10)" />
+            <path class="radar-line" d="M260 78 413 210 365 395 155 382 92 214Z" fill="rgba(255,79,79,.24)" stroke="#ff6b6b" stroke-width="3" filter="url(#softGlow)" />
+            <g fill="#f8fbff" font-size="18" font-weight="800">
+              <text x="238" y="36">穿透</text>
+              <text x="425" y="205">击穿</text>
+              <text x="356" y="430">雪崩</text>
+              <text x="58" y="407">一致性</text>
+              <text x="42" y="214">重建</text>
+            </g>
+            <g fill="#aab6c7" font-size="13">
+              <text x="224" y="62">不存在的数据持续回源</text>
+              <text x="390" y="232">热点 key 瞬间失效</text>
+              <text x="318" y="454">大量 key 集中过期</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#ffb86b" style="--accent: var(--amber); --glow: rgba(255,184,107,.18);">
+      <div class="stage">
+        <div class="kicker reveal">Risk Playbook</div>
+        <h2 class="reveal d1">三类缓存风险，要用三套治理动作，不要一把 TTL 打天下。</h2>
+        <div class="comparison">
+          <article class="lane reveal d2">
+            <h3><svg class="icon" viewBox="0 0 24 24"><path d="M10.3 3.7 2.8 18a2 2 0 0 0 1.8 3h14.8a2 2 0 0 0 1.8-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>问题图谱</h3>
+            <div class="list">
+              <div class="list-item"><span class="dot"></span><div><strong>穿透</strong><span>缓存和数据库都没有，恶意或异常请求持续落库。</span></div></div>
+              <div class="list-item"><span class="dot"></span><div><strong>击穿</strong><span>单个热点 key 失效，大量请求同一时刻回源。</span></div></div>
+              <div class="list-item"><span class="dot"></span><div><strong>雪崩</strong><span>大量 key 同时失效，数据库面对大面积流量。</span></div></div>
+            </div>
+          </article>
+          <article class="lane reveal d3" style="--accent: var(--green);">
+            <h3><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>解决动作</h3>
+            <div class="list">
+              <div class="list-item"><span class="dot"></span><div><strong>缓存空值 / 参数校验 / 布隆过滤器</strong><span>先挡住“不存在”的请求。</span></div></div>
+              <div class="list-item"><span class="dot"></span><div><strong>逻辑过期 / 热点永不过期 / 互斥重建</strong><span>让热点重建有秩序。</span></div></div>
+              <div class="list-item"><span class="dot"></span><div><strong>随机 TTL / 多级缓存 / 限流降级</strong><span>把集中失效打散。</span></div></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#57f2a7" style="--accent: var(--green); --glow: rgba(87,242,167,.20);">
+      <div class="stage stage-wide">
+        <div class="kicker reveal">Distributed Lock</div>
+        <h2 class="reveal d1">分布式锁最难的不是“抢到锁”，而是锁在异常世界里仍然安全。</h2>
+        <div class="topology reveal d2">
+          <svg viewBox="0 0 980 500" role="img" aria-label="Redis 分布式锁拓扑图">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L8,3 z" fill="#57f2a7" />
+              </marker>
+            </defs>
+            <path class="path" d="M155 250 C260 120, 360 120, 470 205" fill="none" stroke="#57f2a7" stroke-width="3" marker-end="url(#arrow)" />
+            <path class="path" d="M155 250 C280 385, 380 378, 470 292" fill="none" stroke="#77a7ff" stroke-width="3" marker-end="url(#arrow)" style="transition-delay:.22s" />
+            <path class="path" d="M620 205 C720 130, 800 130, 884 205" fill="none" stroke="#ffb86b" stroke-width="3" marker-end="url(#arrow)" style="transition-delay:.42s" />
+            <path class="path" d="M620 292 C715 368, 792 370, 884 292" fill="none" stroke="#ff4f4f" stroke-width="3" marker-end="url(#arrow)" style="transition-delay:.58s" />
+            <g class="node">
+              <rect x="40" y="195" width="150" height="110" rx="8" />
+              <text x="82" y="238">请求</text>
+              <text class="sub" x="66" y="266">order:1001</text>
+            </g>
+            <g class="node">
+              <rect x="440" y="160" width="210" height="86" rx="8" />
+              <text x="500" y="198">SET NX PX</text>
+              <text class="sub" x="470" y="222">带唯一 requestId 和过期时间</text>
+            </g>
+            <g class="node">
+              <rect x="440" y="254" width="210" height="86" rx="8" />
+              <text x="504" y="292">Business</text>
+              <text class="sub" x="482" y="316">业务执行可能超时或失败</text>
+            </g>
+            <g class="node">
+              <rect x="830" y="160" width="118" height="86" rx="8" />
+              <text x="865" y="198">TTL</text>
+              <text class="sub" x="850" y="222">防死锁</text>
+            </g>
+            <g class="node">
+              <rect x="830" y="254" width="118" height="86" rx="8" />
+              <text x="850" y="292">Lua Del</text>
+              <text class="sub" x="845" y="316">只删自己的锁</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#4de3ff" style="--accent: var(--cyan); --glow: rgba(77,227,255,.18);">
+      <div class="stage split">
+        <div>
+          <div class="kicker reveal">Real Scenes</div>
+          <h2 class="reveal d1">商品详情、库存、热门排行，是 Redis 最容易产生价值的地方。</h2>
+          <p class="lead reveal d2">这些场景共同特征很清楚：读多写少、热点明显、短时间内允许一定程度不一致，或需要极快的排序和计数。</p>
+        </div>
+        <div class="card reveal d3">
+          <h3>场景适配度</h3>
+          <div class="bar-list">
+            <div class="bar-row"><span>商品详情</span><div class="bar-track"><div class="bar-fill" style="--value: 92%;"></div></div><span>92</span></div>
+            <div class="bar-row"><span>验证码</span><div class="bar-track"><div class="bar-fill" style="--value: 86%;"></div></div><span>86</span></div>
+            <div class="bar-row"><span>点赞浏览</span><div class="bar-track"><div class="bar-fill" style="--value: 88%;"></div></div><span>88</span></div>
+            <div class="bar-row"><span>排行榜</span><div class="bar-track"><div class="bar-fill" style="--value: 95%;"></div></div><span>95</span></div>
+            <div class="bar-row"><span>强一致账务</span><div class="bar-track"><div class="bar-fill" style="--value: 28%;"></div></div><span>28</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#ff4f4f" style="--accent: var(--redis); --glow: rgba(255,79,79,.20);">
+      <div class="stage">
+        <div class="kicker reveal">Misconceptions</div>
+        <h2 class="reveal d1">初学者最容易误判的四件事，都会在真实项目里放大。</h2>
+        <div class="bento">
+          <article class="card span-6 reveal d2">
+            <h3>Redis 就是缓存</h3>
+            <p>缓存只是入口。它还是数据结构服务、共享状态层、轻量协调组件。</p>
+          </article>
+          <article class="card span-6 reveal d3" style="--accent: var(--amber);">
+            <h3>加缓存一定提速</h3>
+            <p>命中率、回源策略、失效策略没有设计好，缓存可能只是多了一段复杂链路。</p>
+          </article>
+          <article class="card span-6 reveal d4" style="--accent: var(--green);">
+            <h3>分布式锁很简单</h3>
+            <p>锁过期、锁续期、锁释放、异常边界，才是生产级设计的核心。</p>
+          </article>
+          <article class="card span-6 reveal d5" style="--accent: var(--cyan);">
+            <h3>不区分一致性要求</h3>
+            <p>有些数据可以短暂不一致，有些数据绝对不能。业务容忍度决定缓存策略。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#57f2a7" style="--accent: var(--green); --glow: rgba(87,242,167,.18);">
+      <div class="stage">
+        <div class="kicker reveal">Interview Snapshot</div>
+        <h2 class="reveal d1">如果只能带走一张面试速记卡，就带走这张。</h2>
+        <div class="bento">
+          <article class="card span-4 reveal d2">
+            <h3>数据结构</h3>
+            <p><span class="highlight">String / Hash / List / Set / Sorted Set</span>。记住它们对应的业务语义，而不是只背命令。</p>
+          </article>
+          <article class="card span-4 reveal d3" style="--accent: var(--amber);">
+            <h3>三大缓存问题</h3>
+            <p>穿透查不存在，击穿打热点，雪崩是大量 key 同时失效。</p>
+          </article>
+          <article class="card span-4 reveal d4" style="--accent: var(--violet);">
+            <h3>锁为什么难</h3>
+            <p>不是设置 key，而是保证过期、释放、安全性和异常边界都可控。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-accent="#ff4f4f" style="--accent: var(--redis); --glow: rgba(255,79,79,.22);">
+      <div class="stage closing">
+        <div class="kicker reveal">Closing</div>
+        <h2 class="reveal d1">Redis 的价值，在性能与状态管理的交汇处。</h2>
+        <p class="lead reveal d2">真正有用的不是“会用 Redis”，而是知道它在系统里承担什么角色、适合什么场景、会带来哪些边界和风险。</p>
+        <div class="pill-row reveal d3" style="justify-content:center;">
+          <span class="pill">减轻数据库压力</span>
+          <span class="pill">提升高频访问效率</span>
+          <span class="pill">管理轻量共享状态</span>
+          <span class="pill">警惕缓存系统性风险</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const deck = document.getElementById("deck");
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progressBar = document.getElementById("progressBar");
+    const counter = document.getElementById("counter");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    let current = 0;
+
+    function pad(num) {
+      return String(num).padStart(2, "0");
+    }
+
+    function update(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("is-active", slideIndex === current);
+      });
+      progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+      counter.textContent = `${pad(current + 1)}/${pad(slides.length)}`;
+    }
+
+    function goTo(index) {
+      const target = slides[Math.max(0, Math.min(index, slides.length - 1))];
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      update(slides.indexOf(target));
+    }
+
+    prevBtn.addEventListener("click", () => goTo(current - 1));
+    nextBtn.addEventListener("click", () => goTo(current + 1));
+
+    document.addEventListener("keydown", (event) => {
+      const forward = ["ArrowDown", "ArrowRight", "PageDown", " "];
+      const backward = ["ArrowUp", "ArrowLeft", "PageUp"];
+      if (forward.includes(event.key)) {
+        event.preventDefault();
+        goTo(current + 1);
+      }
+      if (backward.includes(event.key)) {
+        event.preventDefault();
+        goTo(current - 1);
+      }
+      if (event.key === "Home") {
+        event.preventDefault();
+        goTo(0);
+      }
+      if (event.key === "End") {
+        event.preventDefault();
+        goTo(slides.length - 1);
+      }
+    });
+
+    const observerRoot = window.matchMedia("(max-width: 980px)").matches ? null : deck;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          update(slides.indexOf(entry.target));
+        }
+      });
+    }, {
+      root: observerRoot,
+      threshold: .58
+    });
+
+    slides.forEach((slide) => observer.observe(slide));
+
+    deck.addEventListener("scroll", () => {
+      const max = Math.max(1, deck.scrollHeight - deck.clientHeight);
+      const ratio = deck.scrollTop / max;
+      document.documentElement.style.setProperty("--scroll-shift", ratio.toFixed(3));
+    }, { passive: true });
+
+    update(0);
+  </script>
+</body>
+</html>

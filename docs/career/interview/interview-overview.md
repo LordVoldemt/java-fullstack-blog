@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/interview-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多人在准备 Java 面试时，第一反应都是去找“八股文”“高频面试题”“面试宝典”。这些资料当然有价值，但如果准备方式不对，就很容易出现一个现象：
 
 - 背的时候觉得自己都会

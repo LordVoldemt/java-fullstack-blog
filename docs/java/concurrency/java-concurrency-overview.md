@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/java-concurrency-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 Java 并发编程几乎是每个后端开发者都会遇到、但又很少有人真正学扎实的一块内容。
 
 你可以不天天手写线程池，也可以暂时不碰底层同步器，但你很难完全避开并发问题。接口并发访问、缓存竞争、异步任务、消息消费、批处理调度、线程池配置，这些场景本质上都在和并发打交道。

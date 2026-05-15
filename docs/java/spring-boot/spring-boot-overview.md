@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/spring-boot-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 Spring Boot 可能是很多 Java 开发者最熟悉的框架之一。创建项目、写一个 Controller、启动应用、访问接口，这一套流程对很多人来说几乎已经成了肌肉记忆。
 
 也正因为它太常见，很多人容易产生一种错觉：Spring Boot 不就是“帮你把 Spring 用起来更方便”吗？

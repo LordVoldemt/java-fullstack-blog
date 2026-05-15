@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/java-basics-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多人学 Java 时都会有一种错觉：只要会写 `Spring Boot` 接口、会连数据库、能把项目跑起来，Java 基础就算过关了。
 
 可一旦进入真实开发，问题很快就会暴露出来：

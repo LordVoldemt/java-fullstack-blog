@@ -11,6 +11,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/llm-basics-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 如果你刚开始学大模型，很容易出现一种熟悉的感觉：名词看了很多，视频刷了不少，`LLM`、`Prompt`、`RAG`、`Embedding`、向量数据库、`Function Calling`、`Agent`、`MCP` 这些词也都听过，但它们到底是什么关系，还是有点乱。
 
 很多初学者会卡在两个地方：

@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../../presentations/git-dev-tools-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多开发者会把“技术成长”和“开发效率”分开来看，好像前者是学框架、学原理，后者只是记几个快捷键、背几条 Git 命令。
 
 可真实工作里，一个人是否高效，并不只取决于他会不会写代码，还取决于他如何管理变更、如何定位问题、如何组织工作流。

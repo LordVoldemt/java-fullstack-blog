@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="../presentations/java-index-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 这里汇总 Java 后端核心基础内容，适合作为系统学习和查漏补缺入口。
 
 ## 子栏目

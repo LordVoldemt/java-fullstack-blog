@@ -21,6 +21,16 @@
   </span>
 </a>
 
+<a class="presentation-link" href="./presentations/navigation-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 如果你是第一次进入这个博客，可以按下面的方式选择阅读路径。
 
 ## 想系统补后端基础
