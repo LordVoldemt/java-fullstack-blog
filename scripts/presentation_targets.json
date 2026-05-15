@@ -1,0 +1,219 @@
+[
+  {
+    "markdown": "docs/about.md",
+    "slug": "about",
+    "asset": "docs/public/assets/presentations/about-ppt.html",
+    "route": "docs/presentations/about-ppt.md",
+    "routeSrc": "../assets/presentations/about-ppt.html"
+  },
+  {
+    "markdown": "docs/index.md",
+    "slug": "home-index",
+    "asset": "docs/public/assets/presentations/home-index-ppt.html",
+    "route": "docs/presentations/home-index-ppt.md",
+    "routeSrc": "../assets/presentations/home-index-ppt.html"
+  },
+  {
+    "markdown": "docs/navigation.md",
+    "slug": "navigation",
+    "asset": "docs/public/assets/presentations/navigation-ppt.html",
+    "route": "docs/presentations/navigation-ppt.md",
+    "routeSrc": "../assets/presentations/navigation-ppt.html"
+  },
+  {
+    "markdown": "docs/ai/index.md",
+    "slug": "ai-index",
+    "asset": "docs/public/assets/presentations/ai-index-ppt.html",
+    "route": "docs/presentations/ai-index-ppt.md",
+    "routeSrc": "../assets/presentations/ai-index-ppt.html"
+  },
+  {
+    "markdown": "docs/ai/ai-app-dev/ai-app-dev-overview.md",
+    "slug": "ai-app-dev-overview",
+    "asset": "docs/public/assets/presentations/ai-app-dev-overview-ppt.html",
+    "route": "docs/presentations/ai-app-dev-overview-ppt.md",
+    "routeSrc": "../assets/presentations/ai-app-dev-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/ai/llm-basics/llm-basics-overview.md",
+    "slug": "llm-basics-overview",
+    "asset": "docs/public/assets/presentations/llm-basics-overview-ppt.html",
+    "route": "docs/presentations/llm-basics-overview-ppt.md",
+    "routeSrc": "../assets/presentations/llm-basics-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/career/index.md",
+    "slug": "career-index",
+    "asset": "docs/public/assets/presentations/career-index-ppt.html",
+    "route": "docs/presentations/career-index-ppt.md",
+    "routeSrc": "../assets/presentations/career-index-ppt.html"
+  },
+  {
+    "markdown": "docs/career/interview/interview-overview.md",
+    "slug": "interview-overview",
+    "asset": "docs/public/assets/presentations/interview-overview-ppt.html",
+    "route": "docs/presentations/interview-overview-ppt.md",
+    "routeSrc": "../assets/presentations/interview-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/career/learning-path/learning-path-overview.md",
+    "slug": "learning-path-overview",
+    "asset": "docs/public/assets/presentations/learning-path-overview-ppt.html",
+    "route": "docs/presentations/learning-path-overview-ppt.md",
+    "routeSrc": "../assets/presentations/learning-path-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/index.md",
+    "slug": "java-index",
+    "asset": "docs/public/assets/presentations/java-index-ppt.html",
+    "route": "docs/presentations/java-index-ppt.md",
+    "routeSrc": "../assets/presentations/java-index-ppt.html"
+  },
+  {
+    "markdown": "docs/java/basics/java-basics-overview.md",
+    "slug": "java-basics-overview",
+    "asset": "docs/public/assets/presentations/java-basics-overview-ppt.html",
+    "route": "docs/presentations/java-basics-overview-ppt.md",
+    "routeSrc": "../assets/presentations/java-basics-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/build-tools/maven-gradle-overview.md",
+    "slug": "maven-gradle-overview",
+    "asset": "docs/public/assets/presentations/maven-gradle-overview-ppt.html",
+    "route": "docs/presentations/maven-gradle-overview-ppt.md",
+    "routeSrc": "../assets/presentations/maven-gradle-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/collections/java-collections-overview.md",
+    "slug": "java-collections-overview",
+    "asset": "docs/public/assets/presentations/java-collections-overview-ppt.html",
+    "route": "docs/presentations/java-collections-overview-ppt.md",
+    "routeSrc": "../assets/presentations/java-collections-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/concurrency/java-concurrency-overview.md",
+    "slug": "java-concurrency-overview",
+    "asset": "docs/public/assets/presentations/java-concurrency-overview-ppt.html",
+    "route": "docs/presentations/java-concurrency-overview-ppt.md",
+    "routeSrc": "../assets/presentations/java-concurrency-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/dev-tools/git-dev-tools-overview.md",
+    "slug": "git-dev-tools-overview",
+    "asset": "docs/public/assets/presentations/git-dev-tools-overview-ppt.html",
+    "route": "docs/presentations/git-dev-tools-overview-ppt.md",
+    "routeSrc": "../assets/presentations/git-dev-tools-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/jvm/jvm-overview.md",
+    "slug": "jvm-overview",
+    "asset": "docs/public/assets/presentations/jvm-overview-ppt.html",
+    "route": "docs/presentations/jvm-overview-ppt.md",
+    "routeSrc": "../assets/presentations/jvm-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/mysql/mysql-overview.md",
+    "slug": "mysql-overview",
+    "asset": "docs/public/assets/presentations/mysql-overview-ppt.html",
+    "route": "docs/presentations/mysql-overview-ppt.md",
+    "routeSrc": "../assets/presentations/mysql-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/spring/spring-overview.md",
+    "slug": "spring-overview",
+    "asset": "docs/public/assets/presentations/spring-overview-ppt.html",
+    "route": "docs/presentations/spring-overview-ppt.md",
+    "routeSrc": "../assets/presentations/spring-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/java/spring-boot/spring-boot-overview.md",
+    "slug": "spring-boot-overview",
+    "asset": "docs/public/assets/presentations/spring-boot-overview-ppt.html",
+    "route": "docs/presentations/spring-boot-overview-ppt.md",
+    "routeSrc": "../assets/presentations/spring-boot-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/microservices/index.md",
+    "slug": "microservices-index",
+    "asset": "docs/public/assets/presentations/microservices-index-ppt.html",
+    "route": "docs/presentations/microservices-index-ppt.md",
+    "routeSrc": "../assets/presentations/microservices-index-ppt.html"
+  },
+  {
+    "markdown": "docs/microservices/redis/redis-overview.md",
+    "slug": "redis-overview",
+    "asset": "docs/public/assets/presentations/redis-overview-ppt.html",
+    "route": "docs/presentations/redis-overview-ppt.md",
+    "routeSrc": "../assets/presentations/redis-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/microservices/spring-cloud-alibaba/spring-cloud-alibaba-overview.md",
+    "slug": "spring-cloud-alibaba-overview",
+    "asset": "docs/public/assets/presentations/spring-cloud-alibaba-overview-ppt.html",
+    "route": "docs/presentations/spring-cloud-alibaba-overview-ppt.md",
+    "routeSrc": "../assets/presentations/spring-cloud-alibaba-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/project/index.md",
+    "slug": "project-index",
+    "asset": "docs/public/assets/presentations/project-index-ppt.html",
+    "route": "docs/presentations/project-index-ppt.md",
+    "routeSrc": "../assets/presentations/project-index-ppt.html"
+  },
+  {
+    "markdown": "docs/project/ai-projects/ai-projects-overview.md",
+    "slug": "ai-projects-overview",
+    "asset": "docs/public/assets/presentations/ai-projects-overview-ppt.html",
+    "route": "docs/presentations/ai-projects-overview-ppt.md",
+    "routeSrc": "../assets/presentations/ai-projects-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/project/blog-build/blog-build-overview.md",
+    "slug": "blog-build-overview",
+    "asset": "docs/public/assets/presentations/blog-build-overview-ppt.html",
+    "route": "docs/presentations/blog-build-overview-ppt.md",
+    "routeSrc": "../assets/presentations/blog-build-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/project/java-projects/java-projects-overview.md",
+    "slug": "java-projects-overview",
+    "asset": "docs/public/assets/presentations/java-projects-overview-ppt.html",
+    "route": "docs/presentations/java-projects-overview-ppt.md",
+    "routeSrc": "../assets/presentations/java-projects-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/vibe-coding/index.md",
+    "slug": "vibe-coding-index",
+    "asset": "docs/public/assets/presentations/vibe-coding-index-ppt.html",
+    "route": "docs/presentations/vibe-coding-index-ppt.md",
+    "routeSrc": "../assets/presentations/vibe-coding-index-ppt.html"
+  },
+  {
+    "markdown": "docs/vibe-coding/claude/claude-overview.md",
+    "slug": "claude-overview",
+    "asset": "docs/public/assets/presentations/claude-overview-ppt.html",
+    "route": "docs/presentations/claude-overview-ppt.md",
+    "routeSrc": "../assets/presentations/claude-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/vibe-coding/codex/codex-overview.md",
+    "slug": "codex-overview",
+    "asset": "docs/public/assets/presentations/codex-overview-ppt.html",
+    "route": "docs/presentations/codex-overview-ppt.md",
+    "routeSrc": "../assets/presentations/codex-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/vibe-coding/trae/trae-overview.md",
+    "slug": "trae-overview",
+    "asset": "docs/public/assets/presentations/trae-overview-ppt.html",
+    "route": "docs/presentations/trae-overview-ppt.md",
+    "routeSrc": "../assets/presentations/trae-overview-ppt.html"
+  },
+  {
+    "markdown": "docs/vibe-coding/workflows/vibe-coding-overview.md",
+    "slug": "vibe-coding-overview",
+    "asset": "docs/public/assets/presentations/vibe-coding-overview-ppt.html",
+    "route": "docs/presentations/vibe-coding-overview-ppt.md",
+    "routeSrc": "../assets/presentations/vibe-coding-overview-ppt.html"
+  }
+]

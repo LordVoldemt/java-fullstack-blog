@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大模型基础入门：Prompt、RAG、Embedding、MCP 到底是什么，一篇帮你彻底理清 PPT</title>
+<style>
+:root {
+  --bg: #081510;
+  --panel: #10261d;
+  --panel-2: #123226;
+  --mint: #20c997;
+  --cyan: #57d7ff;
+  --gold: #f2b56b;
+  --text: #eefaf5;
+  --muted: #a7c6bb;
+  --line: #214a3d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #05100d;
+  color: var(--text);
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  overflow: hidden;
+}
+.deck {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.slide {
+  display: none;
+  position: relative;
+  width: min(100vw, 177.78vh);
+  height: min(56.25vw, 100vh);
+  padding: 5.4% 6%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(32, 201, 151, .14), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(87, 215, 255, .14), transparent 24%),
+    linear-gradient(135deg, #081510 0%, #0b1713 54%, #07120e 100%);
+}
+.slide.active { display: block; }
+.top-line { position: absolute; inset: 0 auto auto 0; width: 100%; height: 8px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+.page-no { position: absolute; right: 5.8%; bottom: 4.9%; color: var(--cyan); font-size: clamp(11px, 1vw, 15px); }
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--mint);
+  font-size: clamp(13px, 1.2vw, 18px);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+h1, h2 {
+  margin: 0;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+h1 { font-size: clamp(42px, 6vw, 84px); max-width: 72%; }
+h2 { font-size: clamp(28px, 3.6vw, 48px); max-width: 82%; }
+.subtitle {
+  margin: 18px 0 0;
+  max-width: 64%;
+  color: var(--muted);
+  font-size: clamp(16px, 1.5vw, 23px);
+  line-height: 1.55;
+}
+.cover-grid {
+  display: grid;
+  grid-template-columns: 1.18fr .82fr;
+  gap: 5%;
+  height: 100%;
+  align-items: center;
+}
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+.tag-row span,
+.shape-panel span {
+  border: 1px solid rgba(87, 215, 255, .4);
+  background: rgba(18, 50, 38, .72);
+  border-radius: 999px;
+  color: var(--cyan);
+  padding: 8px 13px;
+  font-weight: 800;
+}
+.shape-panel {
+  position: relative;
+  min-height: 420px;
+  border: 1px solid rgba(87, 215, 255, .25);
+  border-radius: 24px;
+  background: rgba(16, 38, 29, .75);
+}
+.shape-core {
+  position: absolute;
+  inset: 36% 28%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(32, 201, 151, .24);
+  border-radius: 18px;
+  color: var(--mint);
+  font-size: clamp(34px, 4vw, 56px);
+  font-weight: 900;
+}
+.shape-panel span:nth-of-type(1) { position: absolute; left: 8%; top: 13%; }
+.shape-panel span:nth-of-type(2) { position: absolute; right: 8%; top: 15%; }
+.shape-panel span:nth-of-type(3) { position: absolute; left: 10%; bottom: 16%; }
+.shape-panel span:nth-of-type(4) { position: absolute; right: 10%; bottom: 14%; }
+.bullet-panel {
+  margin-top: 34px;
+  max-width: 86%;
+  padding: 26px 28px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(16, 38, 29, .82);
+}
+.bullet-panel ul {
+  margin: 0;
+  padding-left: 24px;
+}
+.bullet-panel li {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: clamp(16px, 1.45vw, 22px);
+  line-height: 1.62;
+}
+.bullet-panel li:last-child { margin-bottom: 0; }
+.summary-grid {
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 90%;
+}
+.summary-grid div {
+  min-height: 110px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(18, 50, 38, .76);
+  display: flex;
+  align-items: center;
+}
+.summary-grid strong {
+  font-size: clamp(18px, 1.7vw, 26px);
+  line-height: 1.4;
+}
+.closing {
+  margin-top: 24px;
+  color: var(--gold);
+  font-size: clamp(18px, 1.65vw, 24px);
+  font-weight: 900;
+}
+.controls {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(87, 215, 255, .35);
+  background: rgba(8, 21, 16, .78);
+  color: var(--text);
+  font-weight: 900;
+  cursor: pointer;
+}
+.an, .anim-item {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp .55s ease forwards;
+}
+.active .an:nth-of-type(2),
+.active .anim-item:nth-of-type(2) { animation-delay: .08s; }
+.active .an:nth-of-type(3),
+.active .anim-item:nth-of-type(3) { animation-delay: .16s; }
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.static-export .an,
+.static-export .anim-item {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  .deck { height: auto; min-height: 100vh; }
+  .slide {
+    width: 100vw;
+    height: auto;
+    min-height: 100vh;
+    padding: 4.2rem 1.2rem 5rem;
+  }
+  h1, h2, .subtitle, .bullet-panel, .summary-grid {
+    max-width: 100%;
+  }
+  .cover-grid,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .shape-panel {
+    min-height: 300px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+<section class="slide slide-cover" data-index="1">
+  <div class="top-line"></div>
+  <div class="page-no">01 / 08</div>
+  <div class="cover-grid anim-item">
+    <div class="cover-copy">
+      <p class="eyebrow an">Article Presentation</p>
+      <h1 class="an">大模型基础入门：Prompt、RAG、Embedding、MCP 到底是什么，一篇帮你彻底理清</h1>
+      <p class="subtitle an">如果你刚开始学大模型，很容易出现一种熟悉的感觉：名词看了很多，视频刷了不少，LLM、Prompt、RAG、Embedding、向量数据库、Function Calling、Agent、MCP...</p>
+      <div class="tag-row an"><span>如果你刚开始学大模型，很容易出现一种熟悉的...</span><span>很多初学者会卡在两个地方：</span><span>术语知道不少，但脑子里没有一张完整地图</span><span>API 能调通一点，但不知道一个真正的大模...</span></div>
+    </div>
+    <div class="shape-panel an">
+      <div class="shape-core">PPT</div>
+      <span>阅读地图</span>
+      <span>关键概念</span>
+      <span>章节速览</span>
+      <span>结构总结</span>
+    </div>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="2">
+  <div class="top-line"></div>
+  <div class="page-no">02 / 08</div>
+  <p class="eyebrow an">Article Focus</p>
+  <h2 class="an">先把主线看清</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>如果你刚开始学大模型，很容易出现一种熟悉的感觉：名词看了很多，视频刷了不少，LLM、Prompt、RAG、Embedding、向量数据库、Function Calling...</li><li>很多初学者会卡在两个地方：</li><li>术语知道不少，但脑子里没有一张完整地图</li><li>API 能调通一点，但不知道一个真正的大模型应用是怎么搭起来的</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="3">
+  <div class="top-line"></div>
+  <div class="page-no">03 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">如果你只想记住一条学习路线</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>对初学者来说，我最推荐的顺序是：</li><li>先理解 LLM 和 Prompt</li><li>再理解 Embedding 和向量检索</li><li>再学 RAG</li><li>再看 Function Calling 和工具调用</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="4">
+  <div class="top-line"></div>
+  <div class="page-no">04 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">什么是大模型，为什么它和传统程序不一样</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>大模型，通常指的是以大规模参数和训练语料为基础构建的语言模型。它最直接的能力，是根据上下文生成符合语言规律的输出。</li><li>看起来它像“更聪明的聊天机器人”，但真正关键的区别在于：它不是靠固定规则覆盖所有输入，而是在概率空间里生成最可能的响应。</li><li>这意味着，大模型和传统程序的工作方式有本质差异。</li><li>传统程序通常是：</li><li>规则明确</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="5">
+  <div class="top-line"></div>
+  <div class="page-no">05 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">先把地图看清：这些概念分别解决什么问题</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>很多初学者不是学不会，而是因为这些词都堆在一起，看起来像同一层东西。其实它们各自解决的问题完全不同。</li><li>如果你能先把这张表记住，后面学起来会轻松很多。</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="6">
+  <div class="top-line"></div>
+  <div class="page-no">06 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">Prompt：为什么“怎么问”会直接影响结果质量</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>Prompt 可以简单理解成你给模型的输入指令和上下文。很多人第一次上手大模型时，会觉得 Prompt 不就是“提问方式”吗？表面上确实如此，但从工程视角看，它远不只是提...</li><li>Prompt 至少承担三类职责：</li><li>描述任务目标</li><li>提供上下文边界</li><li>约束输出格式和风格</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="7">
+  <div class="top-line"></div>
+  <div class="page-no">07 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">Embedding：为什么大模型应用离不开“向量化理解”</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>当你开始做知识库问答、语义搜索、相关推荐时，Embedding 几乎是绕不过去的概念。</li><li>它的核心思想，是把文本映射成一个高维向量，让机器可以在“语义空间”里比较相似性。传统搜索更多依赖关键词匹配，而 Embedding 让系统能够在一定程度上理解“意思接近但...</li><li>比如：</li><li>“Java 并发” 和 “多线程编程”</li><li>“缓存雪崩” 和 “大量缓存同时失效”</li></ul>
+  </div>
+</section>
+<section class="slide slide-summary" data-index="8">
+  <div class="top-line"></div>
+  <div class="page-no">08 / 08</div>
+  <p class="eyebrow an">Reading Map</p>
+  <h2 class="an">这篇文章适合怎么读</h2>
+  <div class="summary-grid anim-item"><div><strong>如果你只想记住一条学习路线</strong></div><div><strong>什么是大模型，为什么它和传统程序不一样</strong></div><div><strong>先把地图看清：这些概念分别解决什么问题</strong></div><div><strong>Prompt：为什么“怎么问”会直接影响结果质量</strong></div><div><strong>Embedding：为什么大模型应用离不开“向量化...</strong></div><div><strong>向量数据库：为什么只算出向量还不够</strong></div></div>
+  <p class="closing anim-item">先看地图，再按章节深入，能更快把知识串起来。</p>
+</section>
+</main>
+<nav class="controls" aria-label="幻灯片控制">
+  <button type="button" id="prev" title="上一页">‹</button>
+  <button type="button" id="next" title="下一页">›</button>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll(".slide"));
+let current = 0;
+function resetAnimations(slide) {
+  slide.querySelectorAll(".an, .anim-item, [style*='animation']").forEach(function(item) {
+    const clone = item.cloneNode(true);
+    item.parentNode.replaceChild(clone, item);
+  });
+}
+function showSlide(index) {
+  current = (index + slides.length) % slides.length;
+  slides.forEach((slide, slideIndex) => slide.classList.toggle("active", slideIndex === current));
+  resetAnimations(slides[current]);
+}
+document.getElementById("prev").addEventListener("click", () => showSlide(current - 1));
+document.getElementById("next").addEventListener("click", () => showSlide(current + 1));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight" || event.key === " ") showSlide(current + 1);
+  if (event.key === "ArrowLeft") showSlide(current - 1);
+});
+const hashSlide = Number.parseInt(location.hash.replace("#", ""), 10);
+if (new URLSearchParams(location.search).has("static")) {
+  document.documentElement.classList.add("static-export");
+}
+showSlide(Number.isFinite(hashSlide) ? hashSlide - 1 : 0);
+</script>
+</body>
+</html>

@@ -1,5 +1,26 @@
 # Claude 入门：新手怎么把它用成开发助手，而不只是聊天工具
 
+
+<a class="presentation-link" href="../../presentations/claude-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
+<a class="presentation-link" href="../../presentations/claude-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多人第一次接触 Claude，会先把它当成一个“问答机器人”。这样用当然没问题，但如果你正在学 Java、学后端、写博客，或者刚开始接触 AI 编程工具，只把它当成问答工具其实有点浪费。
 
 对初学者来说，Claude 更大的价值通常不在“替你一口气写完所有代码”，而在于帮你把复杂问题讲清楚、把需求整理清楚、把代码解释清楚、把学习笔记和技术文章写清楚。

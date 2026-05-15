@@ -1,5 +1,26 @@
 # Codex 实战指南：原理、上手、MCP、Skills、插件与发布流程
 
+
+<a class="presentation-link" href="../../presentations/codex-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
+<a class="presentation-link" href="../../presentations/codex-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 > 更新时间：`2026-05-03`
 >
 > 参考资料：

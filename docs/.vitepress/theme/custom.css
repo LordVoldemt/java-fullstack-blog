@@ -177,6 +177,12 @@
   fill: currentColor;
 }
 
+.vp-doc .presentation-link__glyph {
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
 .vp-doc .presentation-link strong {
   display: block;
   font-size: 1rem;

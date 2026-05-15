@@ -1,5 +1,26 @@
 # MySQL 入门：SQL、索引、事务、锁 到底怎么学，为什么后端开发离不开它
 
+
+<a class="presentation-link" href="../../presentations/mysql-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
+<a class="presentation-link" href="../../presentations/mysql-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多 Java 后端开发者刚入行时，对数据库的理解通常停留在“会增删改查”。
 
 写个 `select`、配个 ORM、把数据查出来，看起来需求就完成了。可真实项目做得越多，你越会发现，数据库从来不是一个可以被轻描淡写的基础组件。

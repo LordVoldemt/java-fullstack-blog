@@ -1,5 +1,26 @@
 # Vibe Coding 入门：Trae、Codex、Claude 怎么分工，初学者怎么真正提效
 
+
+<a class="presentation-link" href="../../presentations/vibe-coding-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
+<a class="presentation-link" href="../../presentations/vibe-coding-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
 很多人一听到 “Vibe Coding”，第一反应是“用 AI 写代码更快了”。这句话不能说错，但还是太浅了。
 
 真正有价值的地方，不是你多了一个会生成代码的工具，而是你的开发流程开始变化了。以前我们在搜索引擎、文档、IDE、终端、笔记之间来回切换；现在，AI 可以参与理解需求、分析代码、推进实现、补文档、做复盘。

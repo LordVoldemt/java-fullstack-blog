@@ -1,5 +1,27 @@
 # Java 项目实战入门：从功能开发到系统交付，初学者到底该怎么积累项目经验
 
+
+<a class="presentation-link" href="../../presentations/java-projects-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
+<a class="presentation-link" href="../../presentations/java-projects-overview-ppt" target="_blank" rel="noopener">
+  <span class="presentation-link__icon" aria-hidden="true">
+    <span class="presentation-link__glyph">PPT</span>
+  </span>
+  <span>
+    <strong>打开文章演示版</strong>
+    <small>浏览器幻灯片版速览，支持方向键和空格切换</small>
+  </span>
+</a>
+
+
 很多开发者在学习路线中都会经历一个阶段：
 
 - 基础、集合、并发、Spring、数据库这些知识点好像都学过了

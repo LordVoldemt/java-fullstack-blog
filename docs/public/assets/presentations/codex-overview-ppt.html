@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codex 实战指南：原理、上手、MCP、Skills、插件与发布流程 PPT</title>
+<style>
+:root {
+  --bg: #081510;
+  --panel: #10261d;
+  --panel-2: #123226;
+  --mint: #20c997;
+  --cyan: #57d7ff;
+  --gold: #f2b56b;
+  --text: #eefaf5;
+  --muted: #a7c6bb;
+  --line: #214a3d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #05100d;
+  color: var(--text);
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  overflow: hidden;
+}
+.deck {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.slide {
+  display: none;
+  position: relative;
+  width: min(100vw, 177.78vh);
+  height: min(56.25vw, 100vh);
+  padding: 5.4% 6%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(32, 201, 151, .14), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(87, 215, 255, .14), transparent 24%),
+    linear-gradient(135deg, #081510 0%, #0b1713 54%, #07120e 100%);
+}
+.slide.active { display: block; }
+.top-line { position: absolute; inset: 0 auto auto 0; width: 100%; height: 8px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+.page-no { position: absolute; right: 5.8%; bottom: 4.9%; color: var(--cyan); font-size: clamp(11px, 1vw, 15px); }
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--mint);
+  font-size: clamp(13px, 1.2vw, 18px);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+h1, h2 {
+  margin: 0;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+h1 { font-size: clamp(42px, 6vw, 84px); max-width: 72%; }
+h2 { font-size: clamp(28px, 3.6vw, 48px); max-width: 82%; }
+.subtitle {
+  margin: 18px 0 0;
+  max-width: 64%;
+  color: var(--muted);
+  font-size: clamp(16px, 1.5vw, 23px);
+  line-height: 1.55;
+}
+.cover-grid {
+  display: grid;
+  grid-template-columns: 1.18fr .82fr;
+  gap: 5%;
+  height: 100%;
+  align-items: center;
+}
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+.tag-row span,
+.shape-panel span {
+  border: 1px solid rgba(87, 215, 255, .4);
+  background: rgba(18, 50, 38, .72);
+  border-radius: 999px;
+  color: var(--cyan);
+  padding: 8px 13px;
+  font-weight: 800;
+}
+.shape-panel {
+  position: relative;
+  min-height: 420px;
+  border: 1px solid rgba(87, 215, 255, .25);
+  border-radius: 24px;
+  background: rgba(16, 38, 29, .75);
+}
+.shape-core {
+  position: absolute;
+  inset: 36% 28%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(32, 201, 151, .24);
+  border-radius: 18px;
+  color: var(--mint);
+  font-size: clamp(34px, 4vw, 56px);
+  font-weight: 900;
+}
+.shape-panel span:nth-of-type(1) { position: absolute; left: 8%; top: 13%; }
+.shape-panel span:nth-of-type(2) { position: absolute; right: 8%; top: 15%; }
+.shape-panel span:nth-of-type(3) { position: absolute; left: 10%; bottom: 16%; }
+.shape-panel span:nth-of-type(4) { position: absolute; right: 10%; bottom: 14%; }
+.bullet-panel {
+  margin-top: 34px;
+  max-width: 86%;
+  padding: 26px 28px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(16, 38, 29, .82);
+}
+.bullet-panel ul {
+  margin: 0;
+  padding-left: 24px;
+}
+.bullet-panel li {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: clamp(16px, 1.45vw, 22px);
+  line-height: 1.62;
+}
+.bullet-panel li:last-child { margin-bottom: 0; }
+.summary-grid {
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 90%;
+}
+.summary-grid div {
+  min-height: 110px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(18, 50, 38, .76);
+  display: flex;
+  align-items: center;
+}
+.summary-grid strong {
+  font-size: clamp(18px, 1.7vw, 26px);
+  line-height: 1.4;
+}
+.closing {
+  margin-top: 24px;
+  color: var(--gold);
+  font-size: clamp(18px, 1.65vw, 24px);
+  font-weight: 900;
+}
+.controls {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(87, 215, 255, .35);
+  background: rgba(8, 21, 16, .78);
+  color: var(--text);
+  font-weight: 900;
+  cursor: pointer;
+}
+.an, .anim-item {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp .55s ease forwards;
+}
+.active .an:nth-of-type(2),
+.active .anim-item:nth-of-type(2) { animation-delay: .08s; }
+.active .an:nth-of-type(3),
+.active .anim-item:nth-of-type(3) { animation-delay: .16s; }
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.static-export .an,
+.static-export .anim-item {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  .deck { height: auto; min-height: 100vh; }
+  .slide {
+    width: 100vw;
+    height: auto;
+    min-height: 100vh;
+    padding: 4.2rem 1.2rem 5rem;
+  }
+  h1, h2, .subtitle, .bullet-panel, .summary-grid {
+    max-width: 100%;
+  }
+  .cover-grid,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .shape-panel {
+    min-height: 300px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+<section class="slide slide-cover" data-index="1">
+  <div class="top-line"></div>
+  <div class="page-no">01 / 08</div>
+  <div class="cover-grid anim-item">
+    <div class="cover-copy">
+      <p class="eyebrow an">Article Presentation</p>
+      <h1 class="an">Codex 实战指南：原理、上手、MCP、Skills、插件与发布流程</h1>
+      <p class="subtitle an">PPT</p>
+      <div class="tag-row an"><span>PPT</span><span>打开文章演示版</span><span>浏览器幻灯片版速览，支持方向键和空格切换</span><span>&gt; 更新时间：2026-05-03</span></div>
+    </div>
+    <div class="shape-panel an">
+      <div class="shape-core">PPT</div>
+      <span>阅读地图</span>
+      <span>关键概念</span>
+      <span>章节速览</span>
+      <span>结构总结</span>
+    </div>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="2">
+  <div class="top-line"></div>
+  <div class="page-no">02 / 08</div>
+  <p class="eyebrow an">Article Focus</p>
+  <h2 class="an">先把主线看清</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>PPT</li><li>打开文章演示版</li><li>浏览器幻灯片版速览，支持方向键和空格切换</li><li>&gt; 更新时间：2026-05-03</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="3">
+  <div class="top-line"></div>
+  <div class="page-no">03 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">Codex 到底是什么</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>按照 OpenAI 官方文档的定位，Codex 是一个面向软件开发任务的 coding agent。它能在给定上下文中理解代码、编辑文件、执行命令、调用工具，并围绕任务产...</li><li>如果换成更容易理解的话来说，Codex 的核心不是“会不会写一段代码”，而是“能不能在真实工作区里完成一轮任务”。</li><li>一个典型任务往往不只是生成代码，而是：</li><li>先理解项目结构</li><li>读取说明文档和约束</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="4">
+  <div class="top-line"></div>
+  <div class="page-no">04 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">Codex 的工作原理，为什么它更像 agent</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>从官方资料和实际体验来看，Codex 的核心能力可以拆成五层。</li><li>1. 模型推理层</li><li>最底层当然还是大模型。模型负责理解你的意图、分析代码上下文、决定下一步动作，并把复杂任务拆成更小的步骤。</li><li>但在工程场景里，只有“会推理”远远不够。因为很多代码问题不是知识题，而是上下文题。</li><li>例如下面这些问题，脱离项目几乎答不准：</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="5">
+  <div class="top-line"></div>
+  <div class="page-no">05 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">Codex 适合做什么，不适合做什么</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>它特别适合下面这类任务：</li><li>在现有项目里实现一个边界明确的功能</li><li>修复一个可以复现的问题</li><li>改文档、改配置、改脚本并顺手验证</li><li>梳理代码库结构和项目规范</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="6">
+  <div class="top-line"></div>
+  <div class="page-no">06 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">新手怎么开始用 Codex</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>如果你是第一次上手，最好的顺序不是一开始就让它“做大项目”，而是先建立正确工作方式。</li><li>第一步：先让它理解项目</li><li>比如你可以让它做这些事：</li><li>帮我解释这个仓库的目录结构</li><li>帮我找出 VitePress 的导航配置在哪</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="7">
+  <div class="top-line"></div>
+  <div class="page-no">07 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">本地启动：以 VitePress 博客为例</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>如果你的项目和本文类似，也是 VitePress + Markdown + GitHub Pages，本地启动其实很简单。</li><li>先安装依赖：</li><li>启动本地开发环境：</li><li>默认会启动本地站点，通常是：</li><li>如果你改的是文章、导航、首页文案，通常只要刷新页面就能看到结果。</li></ul>
+  </div>
+</section>
+<section class="slide slide-summary" data-index="8">
+  <div class="top-line"></div>
+  <div class="page-no">08 / 08</div>
+  <p class="eyebrow an">Reading Map</p>
+  <h2 class="an">这篇文章适合怎么读</h2>
+  <div class="summary-grid anim-item"><div><strong>Codex 到底是什么</strong></div><div><strong>Codex 的工作原理，为什么它更像 agent</strong></div><div><strong>Codex 适合做什么，不适合做什么</strong></div><div><strong>新手怎么开始用 Codex</strong></div><div><strong>本地启动：以 VitePress 博客为例</strong></div><div><strong>什么是 MCP，为什么它是 Codex 连接真实世...</strong></div></div>
+  <p class="closing anim-item">先看地图，再按章节深入，能更快把知识串起来。</p>
+</section>
+</main>
+<nav class="controls" aria-label="幻灯片控制">
+  <button type="button" id="prev" title="上一页">‹</button>
+  <button type="button" id="next" title="下一页">›</button>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll(".slide"));
+let current = 0;
+function resetAnimations(slide) {
+  slide.querySelectorAll(".an, .anim-item, [style*='animation']").forEach(function(item) {
+    const clone = item.cloneNode(true);
+    item.parentNode.replaceChild(clone, item);
+  });
+}
+function showSlide(index) {
+  current = (index + slides.length) % slides.length;
+  slides.forEach((slide, slideIndex) => slide.classList.toggle("active", slideIndex === current));
+  resetAnimations(slides[current]);
+}
+document.getElementById("prev").addEventListener("click", () => showSlide(current - 1));
+document.getElementById("next").addEventListener("click", () => showSlide(current + 1));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight" || event.key === " ") showSlide(current + 1);
+  if (event.key === "ArrowLeft") showSlide(current - 1);
+});
+const hashSlide = Number.parseInt(location.hash.replace("#", ""), 10);
+if (new URLSearchParams(location.search).has("static")) {
+  document.documentElement.classList.add("static-export");
+}
+showSlide(Number.isFinite(hashSlide) ? hashSlide - 1 : 0);
+</script>
+</body>
+</html>

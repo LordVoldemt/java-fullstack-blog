@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spring Boot 入门：为什么它能让 Java 开发更快，以及真实项目里到底怎么用 PPT</title>
+<style>
+:root {
+  --bg: #081510;
+  --panel: #10261d;
+  --panel-2: #123226;
+  --mint: #20c997;
+  --cyan: #57d7ff;
+  --gold: #f2b56b;
+  --text: #eefaf5;
+  --muted: #a7c6bb;
+  --line: #214a3d;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #05100d;
+  color: var(--text);
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  overflow: hidden;
+}
+.deck {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.slide {
+  display: none;
+  position: relative;
+  width: min(100vw, 177.78vh);
+  height: min(56.25vw, 100vh);
+  padding: 5.4% 6%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(32, 201, 151, .14), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(87, 215, 255, .14), transparent 24%),
+    linear-gradient(135deg, #081510 0%, #0b1713 54%, #07120e 100%);
+}
+.slide.active { display: block; }
+.top-line { position: absolute; inset: 0 auto auto 0; width: 100%; height: 8px; background: linear-gradient(90deg, var(--mint), var(--cyan)); }
+.page-no { position: absolute; right: 5.8%; bottom: 4.9%; color: var(--cyan); font-size: clamp(11px, 1vw, 15px); }
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--mint);
+  font-size: clamp(13px, 1.2vw, 18px);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+h1, h2 {
+  margin: 0;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+h1 { font-size: clamp(42px, 6vw, 84px); max-width: 72%; }
+h2 { font-size: clamp(28px, 3.6vw, 48px); max-width: 82%; }
+.subtitle {
+  margin: 18px 0 0;
+  max-width: 64%;
+  color: var(--muted);
+  font-size: clamp(16px, 1.5vw, 23px);
+  line-height: 1.55;
+}
+.cover-grid {
+  display: grid;
+  grid-template-columns: 1.18fr .82fr;
+  gap: 5%;
+  height: 100%;
+  align-items: center;
+}
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+.tag-row span,
+.shape-panel span {
+  border: 1px solid rgba(87, 215, 255, .4);
+  background: rgba(18, 50, 38, .72);
+  border-radius: 999px;
+  color: var(--cyan);
+  padding: 8px 13px;
+  font-weight: 800;
+}
+.shape-panel {
+  position: relative;
+  min-height: 420px;
+  border: 1px solid rgba(87, 215, 255, .25);
+  border-radius: 24px;
+  background: rgba(16, 38, 29, .75);
+}
+.shape-core {
+  position: absolute;
+  inset: 36% 28%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(32, 201, 151, .24);
+  border-radius: 18px;
+  color: var(--mint);
+  font-size: clamp(34px, 4vw, 56px);
+  font-weight: 900;
+}
+.shape-panel span:nth-of-type(1) { position: absolute; left: 8%; top: 13%; }
+.shape-panel span:nth-of-type(2) { position: absolute; right: 8%; top: 15%; }
+.shape-panel span:nth-of-type(3) { position: absolute; left: 10%; bottom: 16%; }
+.shape-panel span:nth-of-type(4) { position: absolute; right: 10%; bottom: 14%; }
+.bullet-panel {
+  margin-top: 34px;
+  max-width: 86%;
+  padding: 26px 28px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(16, 38, 29, .82);
+}
+.bullet-panel ul {
+  margin: 0;
+  padding-left: 24px;
+}
+.bullet-panel li {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: clamp(16px, 1.45vw, 22px);
+  line-height: 1.62;
+}
+.bullet-panel li:last-child { margin-bottom: 0; }
+.summary-grid {
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 90%;
+}
+.summary-grid div {
+  min-height: 110px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(18, 50, 38, .76);
+  display: flex;
+  align-items: center;
+}
+.summary-grid strong {
+  font-size: clamp(18px, 1.7vw, 26px);
+  line-height: 1.4;
+}
+.closing {
+  margin-top: 24px;
+  color: var(--gold);
+  font-size: clamp(18px, 1.65vw, 24px);
+  font-weight: 900;
+}
+.controls {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(87, 215, 255, .35);
+  background: rgba(8, 21, 16, .78);
+  color: var(--text);
+  font-weight: 900;
+  cursor: pointer;
+}
+.an, .anim-item {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp .55s ease forwards;
+}
+.active .an:nth-of-type(2),
+.active .anim-item:nth-of-type(2) { animation-delay: .08s; }
+.active .an:nth-of-type(3),
+.active .anim-item:nth-of-type(3) { animation-delay: .16s; }
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.static-export .an,
+.static-export .anim-item {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  .deck { height: auto; min-height: 100vh; }
+  .slide {
+    width: 100vw;
+    height: auto;
+    min-height: 100vh;
+    padding: 4.2rem 1.2rem 5rem;
+  }
+  h1, h2, .subtitle, .bullet-panel, .summary-grid {
+    max-width: 100%;
+  }
+  .cover-grid,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .shape-panel {
+    min-height: 300px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+<section class="slide slide-cover" data-index="1">
+  <div class="top-line"></div>
+  <div class="page-no">01 / 08</div>
+  <div class="cover-grid anim-item">
+    <div class="cover-copy">
+      <p class="eyebrow an">Article Presentation</p>
+      <h1 class="an">Spring Boot 入门：为什么它能让 Java 开发更快，以及真实项目里到底怎么用</h1>
+      <p class="subtitle an">PPT</p>
+      <div class="tag-row an"><span>PPT</span><span>打开文章演示版</span><span>浏览器幻灯片版速览，支持方向键和空格切换</span><span>Spring Boot 可能是很多 Jav...</span></div>
+    </div>
+    <div class="shape-panel an">
+      <div class="shape-core">PPT</div>
+      <span>阅读地图</span>
+      <span>关键概念</span>
+      <span>章节速览</span>
+      <span>结构总结</span>
+    </div>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="2">
+  <div class="top-line"></div>
+  <div class="page-no">02 / 08</div>
+  <p class="eyebrow an">Article Focus</p>
+  <h2 class="an">先把主线看清</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>PPT</li><li>打开文章演示版</li><li>浏览器幻灯片版速览，支持方向键和空格切换</li><li>Spring Boot 可能是很多 Java 开发者最熟悉的框架之一。创建项目、写一个 Controller、启动应用、访问接口，这一套流程对很多人来说几乎已经成了肌肉记...</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="3">
+  <div class="top-line"></div>
+  <div class="page-no">03 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">Spring Boot 是干嘛的</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>用最直白的话说，Spring Boot 的目标是：</li><li>**让你更快搭起一个能跑、能扩展、能维护的 Java 后端项目。**</li><li>在 Spring Boot 出现之前，Java Web 项目往往会遇到这些麻烦：</li><li>手写大量 XML 或配置类</li><li>自己拼各种依赖版本</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="4">
+  <div class="top-line"></div>
+  <div class="page-no">04 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">Spring Boot 适合在哪些场景用</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>它非常适合这些场景：</li><li>搭建 RESTful 接口服务</li><li>做后台管理系统</li><li>做电商、订单、用户等业务系统</li><li>做微服务中的单个服务</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="5">
+  <div class="top-line"></div>
+  <div class="page-no">05 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">先把地图看清：Spring Boot 主要解决什么问题</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>如果你先记住这张表，后面学习会清晰很多。</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="6">
+  <div class="top-line"></div>
+  <div class="page-no">06 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">自动配置：Spring Boot 最核心的能力之一</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>很多人接触 Spring Boot 时，最直观的体验就是：明明自己没配置多少东西，为什么 Web 服务、JSON 序列化、日志、数据源这些能力都已经可用了？</li><li>背后的关键就是自动配置。</li><li>你可以把自动配置理解成一种规则系统：</li><li>某些类在项目依赖里存在</li><li>某些配置项满足条件</li></ul>
+  </div>
+</section>
+<section class="slide slide-bullets" data-index="7">
+  <div class="top-line"></div>
+  <div class="page-no">07 / 08</div>
+  <p class="eyebrow an">Key Section</p>
+  <h2 class="an">一个最小 Spring Boot 项目长什么样</h2>
+  <div class="bullet-panel anim-item">
+    <ul><li>下面是一个最小、可运行的 Spring Boot 入口类：</li><li>@SpringBootApplication 是什么</li><li>它是一个组合注解，你可以先把它理解成：</li><li>告诉 Spring Boot：这是一个应用启动入口</li><li>需要做自动配置</li></ul>
+  </div>
+</section>
+<section class="slide slide-summary" data-index="8">
+  <div class="top-line"></div>
+  <div class="page-no">08 / 08</div>
+  <p class="eyebrow an">Reading Map</p>
+  <h2 class="an">这篇文章适合怎么读</h2>
+  <div class="summary-grid anim-item"><div><strong>Spring Boot 是干嘛的</strong></div><div><strong>Spring Boot 适合在哪些场景用</strong></div><div><strong>先把地图看清：Spring Boot 主要解决什么...</strong></div><div><strong>自动配置：Spring Boot 最核心的能力之一</strong></div><div><strong>一个最小 Spring Boot 项目长什么样</strong></div><div><strong>实战示例一：写一个最小用户查询接口</strong></div></div>
+  <p class="closing anim-item">先看地图，再按章节深入，能更快把知识串起来。</p>
+</section>
+</main>
+<nav class="controls" aria-label="幻灯片控制">
+  <button type="button" id="prev" title="上一页">‹</button>
+  <button type="button" id="next" title="下一页">›</button>
+</nav>
+<script>
+const slides = Array.from(document.querySelectorAll(".slide"));
+let current = 0;
+function resetAnimations(slide) {
+  slide.querySelectorAll(".an, .anim-item, [style*='animation']").forEach(function(item) {
+    const clone = item.cloneNode(true);
+    item.parentNode.replaceChild(clone, item);
+  });
+}
+function showSlide(index) {
+  current = (index + slides.length) % slides.length;
+  slides.forEach((slide, slideIndex) => slide.classList.toggle("active", slideIndex === current));
+  resetAnimations(slides[current]);
+}
+document.getElementById("prev").addEventListener("click", () => showSlide(current - 1));
+document.getElementById("next").addEventListener("click", () => showSlide(current + 1));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowRight" || event.key === " ") showSlide(current + 1);
+  if (event.key === "ArrowLeft") showSlide(current - 1);
+});
+const hashSlide = Number.parseInt(location.hash.replace("#", ""), 10);
+if (new URLSearchParams(location.search).has("static")) {
+  document.documentElement.classList.add("static-export");
+}
+showSlide(Number.isFinite(hashSlide) ? hashSlide - 1 : 0);
+</script>
+</body>
+</html>
